@@ -1,6 +1,7 @@
-def main():
-    print("Hello from work-track!")
+import uvicorn
+from fastapi import FastAPI
 
+app = FastAPI()
 
 if __name__ == "__main__":
-    main()
+    uvicorn.run("main:app", reload=True)
