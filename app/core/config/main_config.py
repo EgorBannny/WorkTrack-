@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from .run_config import RunConfig
 from .api_config import APIConfig
 from .database_config import DatabaseConfig
+from .api_auth_config import AuthJWTConfig
 
 
 class Settings(BaseSettings):
@@ -14,6 +15,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: APIConfig = APIConfig()
     db: DatabaseConfig
+    auth_jwt: AuthJWTConfig = AuthJWTConfig()
 
 
 settings = Settings()
