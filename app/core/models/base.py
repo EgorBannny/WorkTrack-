@@ -1,7 +1,7 @@
 from sqlalchemy.orm import DeclarativeBase, declared_attr
 from sqlalchemy import MetaData
-from utils import camel_case_to_snake_case
-from core.config.main_config import settings
+from app.utils import camel_case_to_snake_case
+from app.core.config.main_config import settings
 
 
 class Base(DeclarativeBase):

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from core.config.main_config import settings
+from app.core.config.main_config import settings
 from .users import users_router
 
 api_v1_router = APIRouter(prefix=settings.api.v1.prefix.v1)
