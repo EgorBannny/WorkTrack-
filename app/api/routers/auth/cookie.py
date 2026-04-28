@@ -5,8 +5,8 @@ from app.core.authentication import auth_cookie_backend
 from app.core.schemas import UserRead, UserCreate
 
 cookie_router = APIRouter(
-    prefix=settings.api.v1.prefix.cookie,
-    tags=[settings.api.v1.tags.cookie],
+    prefix=settings.api.prefix.cookie,
+    tags=[settings.api.tags.cookie],
 )
 
 # /login /logout

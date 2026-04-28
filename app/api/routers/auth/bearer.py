@@ -2,11 +2,11 @@ from fastapi import APIRouter
 from app.core.config.main_config import settings
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
 from app.core.authentication import auth_bearer_backend
-from app.core.schemas import UserRead, UserCreate, UserUpdate
+from app.core.schemas import UserRead, UserCreate
 
 bearer_router = APIRouter(
-    prefix=settings.api.v1.prefix.bearer,
-    tags=[settings.api.v1.tags.bearer],
+    prefix=settings.api.prefix.bearer,
+    tags=[settings.api.tags.bearer],
 )
 
 # /login /logout
