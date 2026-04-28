@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from app.core.config.main_config import settings
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
 from app.core.authentication import auth_cookie_backend
-from app.core.schemas import UserRead, UserCreate, UserUpdate
+from app.core.schemas import UserRead, UserCreate
 
 cookie_router = APIRouter(
     prefix=settings.api.v1.prefix.cookie,
