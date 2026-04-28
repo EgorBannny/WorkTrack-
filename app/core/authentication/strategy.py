@@ -1,5 +1,5 @@
 from fastapi_users.authentication import JWTStrategy
-from core.config.main_config import settings
+from app.core.config.main_config import settings
 
 
 def get_jwt_strategy() -> JWTStrategy:

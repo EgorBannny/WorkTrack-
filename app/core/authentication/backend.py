@@ -8,7 +8,7 @@ auth_bearer_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy,
 )
 auth_cookie_backend = AuthenticationBackend(
-    name="auth-bearer-cookie-backend",
+    name="auth-cookie-jwt-backend",
     transport=cookie_transport,
     get_strategy=get_jwt_strategy,
 )

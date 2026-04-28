@@ -1,5 +1,5 @@
 from fastapi_users.authentication import CookieTransport, BearerTransport
-from core.config.main_config import settings
+from app.core.config.main_config import settings
 
 cookie_transport = CookieTransport(
     cookie_name=settings.auth.cookie.cookie_name,
