@@ -1,0 +1,14 @@
+from fastapi_users.authentication import AuthenticationBackend
+from .transport import bearer_transport, cookie_transport
+from .strategy import get_jwt_strategy
+
+auth_bearer_backend = AuthenticationBackend(
+    name="auth-bearer-jwt-backend",
+    transport=bearer_transport,
+    get_strategy=get_jwt_strategy,
+)
+auth_cookie_backend = AuthenticationBackend(
+    name="auth-bearer-cookie-backend",
+    transport=cookie_transport,
+    get_strategy=get_jwt_strategy,
+)
