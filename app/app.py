@@ -10,7 +10,12 @@ async def lifespan(app: FastAPI):
     await db_helper.dispose()
 
 
-main_app = FastAPI(title="WorkTrack", lifespan=lifespan)
+main_app = FastAPI(
+    title="WorkTrack",
+    description="внутренний корпоративный портал для управления задачами и проектами",
+    version="1.0",
+    lifespan=lifespan,
+)
 main_app.include_router(
     router=api_router,
 )
