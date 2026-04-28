@@ -12,8 +12,14 @@ class AuthJWTConfig(BaseModel):
     public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
     algorithm: str = "RS256"
     access_token_lifetime_seconds: int = EXPIRE_SECONDS
+    # Сброс пароля
     reset_password_token_secret: str
+    reset_password_token_lifetime_seconds: int = 3600
+    reset_password_token_audience: str = "fastapi-users:reset"
+    # Подтверждение email
     verification_token_secret: str
+    verification_token_lifetime_seconds: int = 3600
+    verification_token_audience: str = "fastapi-users:verify"
 
 
 class AuthCookieConfig(BaseModel):

@@ -13,8 +13,18 @@ log = logging.getLogger(__name__)
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
-    reset_password_token_secret = settings.auth.jwt.reset_password_token_secret
-    verification_token_secret = settings.auth.jwt.verification_token_secret
+    # Сброс пароля
+    reset_password_token_secret: str = settings.auth.jwt.reset_password_token_secret
+    reset_password_token_lifetime_seconds: int = (
+        settings.auth.jwt.reset_password_token_lifetime_seconds
+    )
+    reset_password_token_audience: str = settings.auth.jwt.reset_password_token_audience
+    # Подтверждение email
+    verification_token_secret: str = settings.auth.jwt.verification_token_secret
+    verification_token_lifetime_seconds: int = (
+        settings.auth.jwt.verification_token_lifetime_seconds
+    )
+    verification_token_audience: str = settings.auth.jwt.verification_token_audience
 
     async def on_after_register(
         self,
@@ -26,26 +36,26 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
             user.id,
         )
 
-    async def on_after_forgot_password(
-        self,
-        user: User,
-        token: str,
-        request: Optional["Request"] = None,
-    ):
-        log.warning(
-            "User %r has forgot their password. Reset token: %r",
-            user.id,
-            token,
-        )
+    # async def on_after_forgot_password(
+    #     self,
+    #     user: User,
+    #     token: str,
+    #     request: Optional["Request"] = None,
+    # ):
+    #     log.warning(
+    #         "User %r has forgot their password. Reset token: %r",
+    #         user.id,
+    #         token,
+    #     )
 
-    async def on_after_request_verify(
-        self,
-        user: User,
-        token: str,
-        request: Optional["Request"] = None,
-    ):
-        log.warning(
-            "Verification requested for user %r. Verification token: %r",
-            user.id,
-            token,
-        )
+    # async def on_after_request_verify(
+    #     self,
+    #     user: User,
+    #     token: str,
+    #     request: Optional["Request"] = None,
+    # ):
+    #     log.warning(
+    #         "Verification requested for user %r. Verification token: %r",
+    #         user.id,
+    #         token,
+    #     )
