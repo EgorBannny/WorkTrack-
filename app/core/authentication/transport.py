@@ -11,6 +11,4 @@ cookie_transport = CookieTransport(
     cookie_samesite=settings.auth.cookie.cookie_samesite,
 )
 
-bearer_transport = BearerTransport(
-    tokenUrl="auth/jwt/login"
-)  # TODO: Сделать нормальный путь, когда будут готовы ручки
+bearer_transport = BearerTransport(tokenUrl=settings.api.bearer_token_url)

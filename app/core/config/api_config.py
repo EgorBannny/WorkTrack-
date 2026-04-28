@@ -10,8 +10,8 @@ class APIV1Tags(BaseModel):
 class APIV1Prefix(BaseModel):
     v1: str = "/v1"
     auth: str = "/auth"
-    cookie: str = "/cookie/jwt"
-    bearer: str = "/bearer/jwt"
+    cookie: str = "/cookie"
+    bearer: str = "/bearer"
 
 
 class APIV1Config(BaseModel):
@@ -22,3 +22,15 @@ class APIV1Config(BaseModel):
 class APIConfig(BaseModel):
     prefix: str = "/api"
     v1: APIV1Config = APIV1Config()
+
+    @property
+    def bearer_token_url(self) -> str:
+        parts = (
+            self.prefix,
+            self.v1.prefix.v1,
+            self.v1.prefix.auth,
+            self.v1.prefix.bearer,
+            "/login",
+        )
+        path = "".join(parts)
+        return path.removeprefix("/")
