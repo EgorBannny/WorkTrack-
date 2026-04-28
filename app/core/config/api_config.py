@@ -5,6 +5,7 @@ class APIV1Tags(BaseModel):
     auth: str = "Auth"
     cookie: str = "Cookie"
     bearer: str = "Bearer"
+    users: str = "Users"
 
 
 class APIV1Prefix(BaseModel):
@@ -12,6 +13,7 @@ class APIV1Prefix(BaseModel):
     auth: str = "/auth"
     cookie: str = "/cookie"
     bearer: str = "/bearer"
+    users: str = "/users"
 
 
 class APIV1Config(BaseModel):
