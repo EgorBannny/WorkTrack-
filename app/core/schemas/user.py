@@ -1,4 +1,4 @@
-from core.types.user_id import UserIdType
+from app.core.types.user_id import UserIdType
 
 from fastapi_users import schemas
 
