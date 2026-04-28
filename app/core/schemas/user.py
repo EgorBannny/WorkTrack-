@@ -4,12 +4,12 @@ from fastapi_users import schemas
 
 
 class UserRead(schemas.BaseUser[UserIdType]):
-    pass
+    token_version: int = 1
 
 
 class UserCreate(schemas.BaseUserCreate):
-    pass
+    token_version: int = 1
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    pass
+    token_version: int = 1
