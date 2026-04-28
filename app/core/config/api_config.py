@@ -2,12 +2,12 @@ from pydantic import BaseModel
 
 
 class APIV1Tags(BaseModel):
-    users: str = "Users"
+    auth: str = "Auth"
 
 
 class APIV1Prefix(BaseModel):
     v1: str = "/v1"
-    users: str = "/users"
+    auth: str = "/auth"
 
 
 class APIV1Config(BaseModel):
