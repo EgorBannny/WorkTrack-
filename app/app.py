@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.api import api_router
 from contextlib import asynccontextmanager
-from app.core import db_helper
+from app.core.models import db_helper
 
 
 @asynccontextmanager
