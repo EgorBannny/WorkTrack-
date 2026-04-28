@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: APIConfig = APIConfig()
     db: DatabaseConfig
-    auth: AuthConfig = AuthConfig()
+    auth: AuthConfig
 
 
 settings = Settings()

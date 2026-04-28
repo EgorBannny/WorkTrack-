@@ -11,7 +11,9 @@ class AuthJWTConfig(BaseModel):
     private_key_path: Path = BASE_DIR / "certs" / "jwt-private.pem"
     public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
     algorithm: str = "RS256"
-    access_token_lifetime_secondss: int = EXPIRE_SECONDS
+    access_token_lifetime_seconds: int = EXPIRE_SECONDS
+    reset_password_token_secret: str
+    verification_token_secret: str
 
 
 class AuthCookieConfig(BaseModel):
@@ -25,5 +27,5 @@ class AuthCookieConfig(BaseModel):
 
 
 class AuthConfig(BaseModel):
-    jwt: AuthJWTConfig = AuthJWTConfig()
+    jwt: AuthJWTConfig
     cookie: AuthCookieConfig = AuthCookieConfig()
