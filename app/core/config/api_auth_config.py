@@ -23,13 +23,13 @@ class AuthJWTConfig(BaseModel):
 
 
 class AuthCookieConfig(BaseModel):
-    cookie_name: str = "access_token"
-    cookie_max_age: int = EXPIRE_SECONDS
-    cookie_path: str = "/"
-    cookie_domain: str | None = None  # TODO: Поменять на проде
-    cookie_secure: bool = False  # TODO: Поменять на проде
-    cookie_httponly: bool = True
-    cookie_samesite: Literal["lax", "strict", "none"] = "lax"
+    name: str = "access_token"
+    max_age: int = EXPIRE_SECONDS
+    path: str = "/"
+    domain: str | None = None  # TODO: Поменять на проде
+    secure: bool = False  # TODO: Поменять на проде
+    httponly: bool = True
+    samesite: Literal["lax", "strict", "none"] = "lax"
 
 
 class AuthConfig(BaseModel):
