@@ -23,3 +23,13 @@ cookie_router.include_router(
         user_create_schema=UserCreate,
     )
 )
+
+# /request-verify-token /verify
+cookie_router.include_router(
+    router=fastapi_users.get_verify_router(
+        user_schema=UserRead,
+    )
+)
+
+# /forgot-password /reset-password
+cookie_router.include_router(router=fastapi_users.get_reset_password_router())

@@ -5,7 +5,7 @@ from app.api.dependencies.authentication.fastapi_users import fastapi_users
 from app.core.authentication import auth_bearer_backend
 from app.core.schemas import UserRead, UserCreate
 
-http_bearer: HTTPBearer = HTTPBearer()
+http_bearer: HTTPBearer = HTTPBearer(auto_error=False)
 
 bearer_router = APIRouter(
     prefix=settings.api.prefix.bearer,
@@ -27,3 +27,13 @@ bearer_router.include_router(
         user_create_schema=UserCreate,
     )
 )
+
+# /request-verify-token /verify
+bearer_router.include_router(
+    router=fastapi_users.get_verify_router(
+        user_schema=UserRead,
+    )
+)
+
+# /forgot-password /reset-password
+bearer_router.include_router(router=fastapi_users.get_reset_password_router())
