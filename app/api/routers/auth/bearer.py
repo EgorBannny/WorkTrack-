@@ -17,6 +17,7 @@ bearer_router = APIRouter(
 bearer_router.include_router(
     router=fastapi_users.get_auth_router(
         backend=auth_bearer_backend,
+        requires_verification=settings.auth.requires_verification,
     ),
 )
 

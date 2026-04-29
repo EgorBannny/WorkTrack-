@@ -20,6 +20,7 @@ cookie_router = APIRouter(
 cookie_router.include_router(
     router=fastapi_users.get_auth_router(
         backend=auth_cookie_backend,
+        requires_verification=settings.auth.requires_verification,
     ),
 )
 

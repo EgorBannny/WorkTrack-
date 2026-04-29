@@ -33,5 +33,6 @@ class AuthCookieConfig(BaseModel):
 
 
 class AuthConfig(BaseModel):
+    requires_verification: bool = False
     jwt: AuthJWTConfig
     cookie: AuthCookieConfig = AuthCookieConfig()
