@@ -1,9 +1,9 @@
-from app.core.types.user_id import UserIdType
+import uuid
 
 from fastapi_users import schemas
 
 
-class UserRead(schemas.BaseUser[UserIdType]):
+class UserRead(schemas.BaseUser[uuid.UUID]):
     token_version: int = 1
 
 

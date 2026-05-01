@@ -1,9 +1,9 @@
 import logging
+import uuid
 from typing import Optional, TYPE_CHECKING
 from fastapi_users import BaseUserManager, IntegerIDMixin
 
 from app.core.config.main_config import settings
-from app.core.types.user_id import UserIdType
 from app.core.models import User
 
 if TYPE_CHECKING:
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 log = logging.getLogger(__name__)
 
 
-class UserManager(IntegerIDMixin, BaseUserManager[User, UserIdType]):
+class UserManager(IntegerIDMixin, BaseUserManager[User, uuid.UUID]):
     # Сброс пароля
     reset_password_token_secret: str = settings.auth.jwt.reset_password_token_secret
     reset_password_token_lifetime_seconds: int = (
