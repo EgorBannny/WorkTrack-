@@ -25,10 +25,10 @@ def upgrade() -> None:
         sa.Column("id", fastapi_users_db_sqlalchemy.generics.GUID(), nullable=False),
         sa.Column("email", sa.String(length=320), nullable=False),
         sa.Column("hashed_password", sa.String(length=1024), nullable=False),
-        sa.Column("token_version", sa.Integer(), nullable=False),
         sa.Column("is_active", sa.Boolean(), nullable=False),
         sa.Column("is_superuser", sa.Boolean(), nullable=False),
         sa.Column("is_verified", sa.Boolean(), nullable=False),
+        sa.Column("token_version", sa.Integer(), nullable=False),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_users")),
     )
     op.create_index(op.f("ix_users_email"), "users", ["email"], unique=True)
