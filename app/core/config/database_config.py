@@ -23,4 +23,4 @@ class DatabaseRedisConfig(BaseModel):
 
 class DatabaseConfig(BaseModel):
     pg: DatabasePostgresqlConfig
-    # redis: DatabaseRedisConfig
+    redis: DatabaseRedisConfig
