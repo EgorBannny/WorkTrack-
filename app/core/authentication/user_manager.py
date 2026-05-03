@@ -1,13 +1,17 @@
+import json
 import logging
 import uuid
 from typing import Optional, TYPE_CHECKING
 from fastapi_users import BaseUserManager, UUIDIDMixin
+from fastapi_users.db import SQLAlchemyUserDatabase
+from starlette.responses import JSONResponse
 
-from app.core.config.main_config import settings
+from app.core.config import settings
 from app.core.models import User
+from .refresh_token import RefreshTokenService
 
 if TYPE_CHECKING:
-    from fastapi import Request
+    from fastapi import Request, Response
 
 log = logging.getLogger(__name__)
 
@@ -25,6 +29,53 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         settings.auth.jwt.verification_token_lifetime_seconds
     )
     verification_token_audience: str = settings.auth.jwt.verification_token_audience
+
+    def __init__(
+        self,
+        user_db: SQLAlchemyUserDatabase,
+        refresh_token_service: RefreshTokenService,
+    ):
+        super().__init__(user_db)
+        self._refresh_token_service = refresh_token_service
+
+    async def on_after_login(
+        self,
+        user: User,
+        request: Optional["Request"] = None,
+        response: Optional["Response"] = None,
+    ):
+        refresh_token = self._refresh_token_service.write_token(user)
+
+        await self._refresh_token_service.redis.set(
+            f"user_version:{user.id}",
+            user.token_version,
+        )
+
+        if response is None:
+            log.warning("on_after_login: response is None, refresh token не выдан")
+            return
+
+        if isinstance(response, JSONResponse):
+            # Bearer транспорт — добавляем refresh_token в тело ответа
+            body = json.loads(response.body)
+            body["refresh_token"] = refresh_token
+            new_body = json.dumps(body).encode("utf-8")
+            response.body = new_body
+            response.headers["content-length"] = str(len(new_body))
+        else:
+            # Cookie транспорт — ставим отдельную httpOnly cookie
+            response.set_cookie(
+                key=settings.auth.cookie.refresh_name,
+                value=refresh_token,
+                max_age=settings.auth.jwt.refresh_token_lifetime_seconds,
+                path=settings.auth.cookie.path,
+                domain=settings.auth.cookie.domain,
+                secure=settings.auth.cookie.secure,
+                httponly=settings.auth.cookie.httponly,
+                samesite=settings.auth.cookie.samesite,
+            )
+
+        log.info("on_after_login: выдан refresh токен user_id=%s", user.id)
 
     async def on_after_register(
         self,
