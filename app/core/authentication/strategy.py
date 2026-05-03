@@ -13,12 +13,9 @@ from fastapi_users.manager import BaseUserManager
 from redis.asyncio import Redis
 
 from app.core.config.main_config import settings
-from app.core.models import redis_helper
+from app.core.models import redis_helper, User
 
 log = logging.getLogger(__name__)
-
-if TYPE_CHECKING:
-    from app.core.models import User
 
 
 class WorkTrackJWTStrategy(JWTStrategy):
