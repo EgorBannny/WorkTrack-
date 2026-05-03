@@ -4,7 +4,12 @@ from fastapi import APIRouter, Depends, Request, Response
 from pydantic import BaseModel
 
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
-from app.core.authentication import RefreshTokenService, get_refresh_token_service
+from app.api.dependencies.authentication.user_manager import get_user_manager
+from app.core.authentication import (
+    RefreshTokenService,
+    get_refresh_token_service,
+    UserManager,
+)
 from app.core.authentication.strategy import WorkTrackJWTStrategy, get_jwt_strategy
 from app.core.config import settings
 from app.core.models import User
@@ -69,5 +74,47 @@ def make_bearer_logout_router() -> APIRouter:
 
         if body.refresh_token:
             await refresh_service.destroy_token(body.refresh_token)
+
+    return router
+
+
+def make_cookie_logout_all_router() -> APIRouter:
+    router = APIRouter()
+
+    @router.post("/logout-all", status_code=204)
+    async def cookie_logout_all(
+        response: Response,
+        user: Annotated[
+            User,
+            Depends(fastapi_users.current_user(active=True)),
+        ],
+        user_manager: Annotated[UserManager, Depends(get_user_manager)],
+    ):
+        await user_manager.increment_token_version(user)
+
+        response.delete_cookie(
+            key=settings.auth.cookie.access_name,
+            path=settings.auth.cookie.path,
+        )
+        response.delete_cookie(
+            key=settings.auth.cookie.refresh_name,
+            path=settings.auth.cookie.path,
+        )
+
+    return router
+
+
+def make_bearer_logout_all_router() -> APIRouter:
+    router = APIRouter()
+
+    @router.post("/logout-all", status_code=204)
+    async def bearer_logout_all(
+        user: Annotated[
+            User,
+            Depends(fastapi_users.current_user(active=True)),
+        ],
+        user_manager: Annotated[UserManager, Depends(get_user_manager)],
+    ):
+        await user_manager.increment_token_version(user)
 
     return router
