@@ -29,7 +29,8 @@ class AuthJWTConfig(BaseModel):
 
 
 class AuthCookieConfig(BaseModel):
-    name: str = "access_token"
+    access_name: str = "access_token"
+    refresh_name: str = "refresh_token"
     max_age: int = EXPIRE_SECONDS
     path: str = "/"
     domain: str | None = None  # TODO: Поменять на проде

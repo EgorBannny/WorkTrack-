@@ -6,7 +6,7 @@ from app.core.authentication import auth_cookie_backend
 from app.core.schemas import UserRead, UserCreate
 
 api_key_cookie = APIKeyCookie(
-    name=settings.auth.cookie.name,
+    name=settings.auth.cookie.access_name,
     auto_error=False,
 )
 
