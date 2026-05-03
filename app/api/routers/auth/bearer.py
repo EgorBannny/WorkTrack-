@@ -2,7 +2,10 @@ from fastapi import APIRouter, Depends
 from fastapi.security import HTTPBearer
 
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
-from app.api.routers.auth.logout import make_bearer_logout_router
+from app.api.routers.auth.logout import (
+    make_bearer_logout_router,
+    make_bearer_logout_all_router,
+)
 from app.api.routers.auth.refresh import make_bearer_refresh_router
 from app.core.authentication import auth_bearer_backend
 from app.core.config.main_config import settings
@@ -28,8 +31,12 @@ bearer_router.include_router(
     ),
 )
 
+# /logout-all — кастомный
+bearer_router.include_router(make_bearer_logout_all_router())
+
 # /refresh — кастомный
 bearer_router.include_router(make_bearer_refresh_router())
+
 
 # /register
 bearer_router.include_router(

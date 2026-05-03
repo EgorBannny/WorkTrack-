@@ -2,7 +2,10 @@ from fastapi import APIRouter, Depends
 from fastapi.security import APIKeyCookie
 
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
-from app.api.routers.auth.logout import make_cookie_logout_router
+from app.api.routers.auth.logout import (
+    make_cookie_logout_router,
+    make_cookie_logout_all_router,
+)
 from app.api.routers.auth.refresh import make_cookie_refresh_router
 from app.core.authentication import auth_cookie_backend
 from app.core.config.main_config import settings
@@ -29,6 +32,9 @@ cookie_router.include_router(
         requires_verification=settings.auth.requires_verification,
     ),
 )
+
+# /logout-all — кастомный
+cookie_router.include_router(make_cookie_logout_all_router())
 
 # /refresh — кастомный
 cookie_router.include_router(make_cookie_refresh_router())
