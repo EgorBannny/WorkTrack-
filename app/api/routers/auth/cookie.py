@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import APIKeyCookie
-from app.core.config.main_config import settings
+
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
+from app.api.routers.auth.logout import make_cookie_logout_router
 from app.core.authentication import auth_cookie_backend
+from app.core.config.main_config import settings
 from app.core.schemas import UserRead, UserCreate
 
 api_key_cookie = APIKeyCookie(
@@ -16,7 +18,10 @@ cookie_router = APIRouter(
     dependencies=[Depends(api_key_cookie)],
 )
 
-# /login /logout
+# /logout — кастомный
+cookie_router.include_router(make_cookie_logout_router())
+
+# /login /logout — FU-шный logout
 cookie_router.include_router(
     router=fastapi_users.get_auth_router(
         backend=auth_cookie_backend,
