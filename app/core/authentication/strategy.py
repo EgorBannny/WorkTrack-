@@ -1,5 +1,6 @@
 import time
 import logging
+from typing import TYPE_CHECKING
 from typing import Annotated
 from uuid import uuid4
 
@@ -15,6 +16,9 @@ from app.core.config.main_config import settings
 from app.core.models import redis_helper
 
 log = logging.getLogger(__name__)
+
+if TYPE_CHECKING:
+    from app.core.models import User
 
 
 class WorkTrackJWTStrategy(JWTStrategy):
@@ -34,34 +38,39 @@ class WorkTrackJWTStrategy(JWTStrategy):
             data = decode_jwt(
                 encoded_jwt=token,
                 secret=self.decode_key,
-                audience=[self.token_audience],
+                audience=self.token_audience,
                 algorithms=[self.algorithm],
             )
-        except jwt.PyJWTError:
+        except jwt.PyJWTError as e:
+            log.warning("read_token: не удалось декодировать токен: %s", e)
             return None
 
         jti = data.get("jti")
         user_id = data.get("sub")
         token_version = data.get("token_version")
 
-        if jti and await self.redis.exists(f"blacklist:access:{jti}"):
+        if user_id is None:
+            log.warning("read_token: токен не содержит sub")
             return None
 
-        if user_id and token_version is not None:
+        if jti and await self.redis.exists(f"blacklist:access:{jti}"):
+            log.warning("read_token: токен в блэклисте jti=%s", jti)
+            return None
+
+        if token_version is not None:
             current_version = await self.redis.get(f"user_version:{user_id}")
             if current_version is not None and int(current_version) != token_version:
+                log.warning("read_token: версия токена устарела user_id=%s", user_id)
                 return None
-
-        if user_id is None:
-            return None
 
         try:
             parsed_id = user_manager.parse_id(user_id)
             return await user_manager.get(parsed_id)
         except (exceptions.UserNotExists, exceptions.InvalidID):
+            log.warning("read_token: пользователь не найден user_id=%s", user_id)
             return None
 
-    async def write_token(self, user: models.UP) -> str:
+    async def write_token(self, user: User) -> str:
         data = {
             "sub": str(user.id),
             "aud": self.token_audience,
@@ -75,12 +84,12 @@ class WorkTrackJWTStrategy(JWTStrategy):
             algorithm=self.algorithm,
         )
 
-    async def destroy_token(self, token: str, _user: models.UP) -> None:
+    async def destroy_token(self, token: str, _user: User) -> None:
         try:
             data = decode_jwt(
                 encoded_jwt=token,
                 secret=self.decode_key,
-                audience=[self.token_audience],
+                audience=self.token_audience,
                 algorithms=[self.algorithm],
             )
             jti = data.get("jti")
@@ -100,6 +109,7 @@ async def get_jwt_strategy(
         redis=redis,
         secret=settings.auth.jwt.private_key_path.read_text(),
         lifetime_seconds=settings.auth.jwt.access_token_lifetime_seconds,
+        token_audience=[settings.auth.jwt.access_token_audience],
         algorithm=settings.auth.jwt.algorithm,
         public_key=settings.auth.jwt.public_key_path.read_text(),
     )
