@@ -16,7 +16,7 @@ from app.core.models import User
 
 
 class BearerLogoutSchema(BaseModel):
-    refresh_token: str | None = None
+    refresh_token: str
 
 
 def make_cookie_logout_router() -> APIRouter:
