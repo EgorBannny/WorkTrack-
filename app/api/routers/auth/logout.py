@@ -14,31 +14,31 @@ from app.core.authentication.strategy import WorkTrackJWTStrategy, get_jwt_strat
 from app.core.config import settings
 from app.core.models import User
 
+_auth_guard = Depends(fastapi_users.current_user(active=True))
+
 
 class BearerLogoutSchema(BaseModel):
+    access_token: str
     refresh_token: str
 
 
 def make_cookie_logout_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/logout", status_code=204)
+    @router.post("/logout", status_code=204, dependencies=[_auth_guard])
     async def cookie_logout(
         request: Request,
         response: Response,
-        user_token: Annotated[
-            tuple[User, str],
-            Depends(fastapi_users.authenticator.current_user_token(active=True)),
-        ],
         strategy: Annotated[WorkTrackJWTStrategy, Depends(get_jwt_strategy)],
         refresh_service: Annotated[
             RefreshTokenService, Depends(get_refresh_token_service)
         ],
     ):
-        user, access_token = user_token
-        await strategy.destroy_token(access_token, user)
-
+        access_token = request.cookies.get(settings.auth.cookie.access_name)
         refresh_token = request.cookies.get(settings.auth.cookie.refresh_name)
+
+        if access_token:
+            await strategy.destroy_token(access_token)
         if refresh_token:
             await refresh_service.destroy_token(refresh_token)
 
@@ -57,23 +57,16 @@ def make_cookie_logout_router() -> APIRouter:
 def make_bearer_logout_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/logout", status_code=204)
+    @router.post("/logout", status_code=204, dependencies=[_auth_guard])
     async def bearer_logout(
         body: BearerLogoutSchema,
-        user_token: Annotated[
-            tuple[User, str],
-            Depends(fastapi_users.authenticator.current_user_token(active=True)),
-        ],
         strategy: Annotated[WorkTrackJWTStrategy, Depends(get_jwt_strategy)],
         refresh_service: Annotated[
             RefreshTokenService, Depends(get_refresh_token_service)
         ],
     ):
-        user, access_token = user_token
-        await strategy.destroy_token(access_token, user)
-
-        if body.refresh_token:
-            await refresh_service.destroy_token(body.refresh_token)
+        await strategy.destroy_token(body.access_token)
+        await refresh_service.destroy_token(body.refresh_token)
 
     return router
 
