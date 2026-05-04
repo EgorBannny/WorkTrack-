@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi.routing import APIRoute
 from fastapi.security import HTTPBearer
 
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
@@ -19,24 +20,27 @@ bearer_router = APIRouter(
     dependencies=[Depends(http_bearer)],
 )
 
+
+# /login /logout — FU-шный, но удаляем /logout из схемы
+_fu_auth_router = fastapi_users.get_auth_router(
+    backend=auth_bearer_backend,
+    requires_verification=settings.auth.requires_verification,
+)
+_fu_auth_router.routes = [
+    route
+    for route in _fu_auth_router.routes
+    if not (isinstance(route, APIRoute) and route.path == "/logout")
+]
+bearer_router.include_router(router=_fu_auth_router)
+
 # /logout — кастомный
 bearer_router.include_router(make_bearer_logout_router())
-
-
-# /login /logout — FU-шный logout
-bearer_router.include_router(
-    router=fastapi_users.get_auth_router(
-        backend=auth_bearer_backend,
-        requires_verification=settings.auth.requires_verification,
-    ),
-)
 
 # /logout-all — кастомный
 bearer_router.include_router(make_bearer_logout_all_router())
 
 # /refresh — кастомный
 bearer_router.include_router(make_bearer_refresh_router())
-
 
 # /register
 bearer_router.include_router(

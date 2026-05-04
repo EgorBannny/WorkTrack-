@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi.routing import APIRoute
 from fastapi.security import APIKeyCookie
 
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
@@ -22,16 +23,20 @@ cookie_router = APIRouter(
     dependencies=[Depends(api_key_cookie)],
 )
 
+# /login /logout — FU-шный, но удаляем /logout из схемы
+_fu_auth_router = fastapi_users.get_auth_router(
+    backend=auth_cookie_backend,
+    requires_verification=settings.auth.requires_verification,
+)
+_fu_auth_router.routes = [
+    route
+    for route in _fu_auth_router.routes
+    if not (isinstance(route, APIRoute) and route.path == "/logout")
+]
+cookie_router.include_router(router=_fu_auth_router)
+
 # /logout — кастомный
 cookie_router.include_router(make_cookie_logout_router())
-
-# /login /logout — FU-шный logout
-cookie_router.include_router(
-    router=fastapi_users.get_auth_router(
-        backend=auth_cookie_backend,
-        requires_verification=settings.auth.requires_verification,
-    ),
-)
 
 # /logout-all — кастомный
 cookie_router.include_router(make_cookie_logout_all_router())
