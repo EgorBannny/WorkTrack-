@@ -1,15 +1,15 @@
 import uuid
 
-from fastapi_users import schemas
+from fastapi_users.schemas import BaseUser, BaseUserCreate, BaseUserUpdate
 
 
-class UserRead(schemas.BaseUser[uuid.UUID]):
-    token_version: int = 1
+class UserRead(BaseUser[uuid.UUID]):
+    display_name: str
 
 
-class UserCreate(schemas.BaseUserCreate):
-    token_version: int = 1
+class UserCreate(BaseUserCreate):
+    display_name: str
 
 
-class UserUpdate(schemas.BaseUserUpdate):
-    token_version: int = 1
+class UserUpdate(BaseUserUpdate):
+    display_name: str | None = None
