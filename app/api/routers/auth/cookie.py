@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from fastapi.routing import APIRoute
-from fastapi.security import APIKeyCookie
 
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
 from app.api.routers.auth.logout import (
@@ -12,15 +11,9 @@ from app.core.authentication import auth_cookie_backend
 from app.core.config.main_config import settings
 from app.core.schemas import UserRead, UserCreate
 
-api_key_cookie = APIKeyCookie(
-    name=settings.auth.cookie.access_name,
-    auto_error=False,
-)
-
 cookie_router = APIRouter(
     prefix=settings.api.prefix.cookie,
     tags=[settings.api.tags.cookie],
-    dependencies=[Depends(api_key_cookie)],
 )
 
 # /login /logout — FU-шный, но удаляем /logout из схемы

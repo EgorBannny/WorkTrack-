@@ -12,12 +12,9 @@ from app.core.authentication import auth_bearer_backend
 from app.core.config.main_config import settings
 from app.core.schemas import UserRead, UserCreate
 
-http_bearer: HTTPBearer = HTTPBearer(auto_error=False)
-
 bearer_router = APIRouter(
     prefix=settings.api.prefix.bearer,
     tags=[settings.api.tags.bearer],
-    dependencies=[Depends(http_bearer)],
 )
 
 
