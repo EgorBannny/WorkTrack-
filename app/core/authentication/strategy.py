@@ -98,6 +98,10 @@ class WorkTrackJWTStrategy(JWTStrategy):
         except jwt.PyJWTError as e:
             log.warning("destroy_token: не удалось декодировать токен: %s", e)
 
+    async def rotate(self, old_token: str, user: User) -> str:
+        await self.destroy_token(old_token)
+        return self.write_token(user)
+
 
 async def get_jwt_strategy(
     redis: Annotated[Redis, Depends(redis_helper.client_getter)],
