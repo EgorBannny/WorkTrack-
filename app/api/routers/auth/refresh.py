@@ -14,16 +14,18 @@ from app.core.config import settings
 
 
 class BearerRefreshSchema(BaseModel):
+    access_token: str
     refresh_token: str
 
 
 async def _get_user_and_rotate(
-    refresh_token: str | None,
+    old_access_token: str,
+    old_refresh_token: str,
     refresh_service: RefreshTokenService,
     strategy: WorkTrackJWTStrategy,
     user_manager: UserManager,
 ) -> tuple[str, str]:
-    payload = await refresh_service.read_token(refresh_token)
+    payload = await refresh_service.read_token(old_refresh_token)
     if payload is None:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
 
@@ -35,8 +37,8 @@ async def _get_user_and_rotate(
     if not user.is_active:
         raise HTTPException(status_code=401, detail="User is inactive")
 
-    new_refresh = await refresh_service.rotate(refresh_token, user)
-    new_access = await strategy.write_token(user)
+    new_refresh = await refresh_service.rotate(old_refresh_token, user)
+    new_access = await strategy.rotate(old_access_token, user)
 
     await refresh_service.redis.set(f"user_version:{user.id}", user.token_version)
 
@@ -56,10 +58,12 @@ def make_cookie_refresh_router() -> APIRouter:
         strategy: Annotated[WorkTrackJWTStrategy, Depends(get_jwt_strategy)],
         user_manager: Annotated[UserManager, Depends(get_user_manager)],
     ):
-        refresh_token = request.cookies.get(settings.auth.cookie.refresh_name)
+        old_access_token = request.cookies.get(settings.auth.cookie.access_name)
+        old_refresh_token = request.cookies.get(settings.auth.cookie.refresh_name)
 
         new_access, new_refresh = await _get_user_and_rotate(
-            refresh_token=refresh_token,
+            old_access_token=old_access_token,
+            old_refresh_token=old_refresh_token,
             refresh_service=refresh_service,
             strategy=strategy,
             user_manager=user_manager,
@@ -102,7 +106,8 @@ def make_bearer_refresh_router() -> APIRouter:
         user_manager: Annotated[UserManager, Depends(get_user_manager)],
     ):
         new_access, new_refresh = await _get_user_and_rotate(
-            refresh_token=body.refresh_token,
+            old_access_token=body.access_token,
+            old_refresh_token=body.refresh_token,
             refresh_service=refresh_service,
             strategy=strategy,
             user_manager=user_manager,
