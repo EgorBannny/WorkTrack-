@@ -100,7 +100,7 @@ class WorkTrackJWTStrategy(JWTStrategy):
 
     async def rotate(self, old_token: str, user: User) -> str:
         await self.destroy_token(old_token)
-        return self.write_token(user)
+        return await self.write_token(user)
 
 
 async def get_jwt_strategy(

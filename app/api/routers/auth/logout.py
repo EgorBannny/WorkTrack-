@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Request, Response
 from pydantic import BaseModel
 
-from app.api.dependencies.authentication.fastapi_users import fastapi_users
+from app.api.dependencies.authentication import fastapi_users
 from app.api.dependencies.authentication.user_manager import get_user_manager
 from app.core.authentication import (
     RefreshTokenService,
@@ -18,7 +18,6 @@ _auth_guard = Depends(fastapi_users.current_user(active=True))
 
 
 class BearerLogoutSchema(BaseModel):
-    access_token: str
     refresh_token: str
 
 
@@ -57,15 +56,21 @@ def make_cookie_logout_router() -> APIRouter:
 def make_bearer_logout_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/logout", status_code=204, dependencies=[_auth_guard])
+    @router.post("/logout", status_code=204)
     async def bearer_logout(
         body: BearerLogoutSchema,
+        user_token: Annotated[
+            tuple[User, str],
+            Depends(fastapi_users.authenticator.current_user_token(active=True)),
+        ],
         strategy: Annotated[WorkTrackJWTStrategy, Depends(get_jwt_strategy)],
         refresh_service: Annotated[
             RefreshTokenService, Depends(get_refresh_token_service)
         ],
     ):
-        await strategy.destroy_token(body.access_token)
+
+        access_token: str = user_token[1]
+        await strategy.destroy_token(access_token)
         await refresh_service.destroy_token(body.refresh_token)
 
     return router
@@ -79,7 +84,7 @@ def make_cookie_logout_all_router() -> APIRouter:
         response: Response,
         user: Annotated[
             User,
-            Depends(fastapi_users.current_user(active=True)),
+            _auth_guard,
         ],
         user_manager: Annotated[UserManager, Depends(get_user_manager)],
     ):
