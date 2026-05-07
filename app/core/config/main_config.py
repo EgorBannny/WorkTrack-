@@ -3,6 +3,7 @@ from .run_config import RunConfig
 from .api_config import APIConfig
 from .database_config import DatabaseConfig
 from .api_auth_config import AuthConfig
+from .uploads_config import UploadsConfig
 
 
 class Settings(BaseSettings):
@@ -16,6 +17,7 @@ class Settings(BaseSettings):
     api: APIConfig = APIConfig()
     db: DatabaseConfig
     auth: AuthConfig
+    uploads: UploadsConfig = UploadsConfig()
 
 
 settings = Settings()
