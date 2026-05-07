@@ -22,7 +22,9 @@ class BearerLogoutSchema(BaseModel):
 def make_cookie_logout_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT, dependencies=[auth_guard])
+    @router.post(
+        "/logout", status_code=status.HTTP_204_NO_CONTENT, dependencies=[auth_guard]
+    )
     async def cookie_logout(
         request: Request,
         response: Response,
@@ -82,7 +84,7 @@ def make_cookie_logout_all_router() -> APIRouter:
         response: Response,
         user: Annotated[
             User,
-            _auth_guard,
+            auth_guard,
         ],
         user_manager: Annotated[UserManager, Depends(get_user_manager)],
     ):
