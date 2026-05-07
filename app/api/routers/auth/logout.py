@@ -1,9 +1,9 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, Request, Response, status
 from pydantic import BaseModel
 
-from app.api.dependencies.authentication import fastapi_users
+from app.api.dependencies.authentication import fastapi_users, auth_guard
 from app.api.dependencies.authentication.user_manager import get_user_manager
 from app.core.authentication import (
     RefreshTokenService,
@@ -14,8 +14,6 @@ from app.core.authentication.strategy import WorkTrackJWTStrategy, get_jwt_strat
 from app.core.config import settings
 from app.core.models import User
 
-_auth_guard = Depends(fastapi_users.current_user(active=True))
-
 
 class BearerLogoutSchema(BaseModel):
     refresh_token: str
@@ -24,7 +22,7 @@ class BearerLogoutSchema(BaseModel):
 def make_cookie_logout_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/logout", status_code=204, dependencies=[_auth_guard])
+    @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT, dependencies=[auth_guard])
     async def cookie_logout(
         request: Request,
         response: Response,
@@ -56,7 +54,7 @@ def make_cookie_logout_router() -> APIRouter:
 def make_bearer_logout_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/logout", status_code=204)
+    @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
     async def bearer_logout(
         body: BearerLogoutSchema,
         user_token: Annotated[
@@ -79,7 +77,7 @@ def make_bearer_logout_router() -> APIRouter:
 def make_cookie_logout_all_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/logout-all", status_code=204)
+    @router.post("/logout-all", status_code=status.HTTP_204_NO_CONTENT)
     async def cookie_logout_all(
         response: Response,
         user: Annotated[
@@ -105,7 +103,7 @@ def make_cookie_logout_all_router() -> APIRouter:
 def make_bearer_logout_all_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/logout-all", status_code=204)
+    @router.post("/logout-all", status_code=status.HTTP_204_NO_CONTENT)
     async def bearer_logout_all(
         user: Annotated[
             User,

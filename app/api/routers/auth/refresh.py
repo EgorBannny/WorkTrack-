@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from pydantic import BaseModel
 
 from app.api.dependencies.authentication.user_manager import get_user_manager
@@ -27,15 +27,15 @@ async def _get_user_and_rotate(
 ) -> tuple[str, str]:
     payload = await refresh_service.read_token(old_refresh_token)
     if payload is None:
-        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid or expired refresh token")
 
     try:
         user = await user_manager.get(user_manager.parse_id(payload["sub"]))
     except Exception:
-        raise HTTPException(status_code=401, detail="User not found")
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "User not found")
 
     if not user.is_active:
-        raise HTTPException(status_code=401, detail="User is inactive")
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "User is inactive")
 
     new_refresh = await refresh_service.rotate(old_refresh_token, user)
     new_access = await strategy.rotate(old_access_token, user)
@@ -48,7 +48,7 @@ async def _get_user_and_rotate(
 def make_cookie_refresh_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/refresh", status_code=204)
+    @router.post("/refresh", status_code=status.HTTP_204_NO_CONTENT)
     async def cookie_refresh(
         request: Request,
         response: Response,
@@ -96,7 +96,7 @@ def make_cookie_refresh_router() -> APIRouter:
 def make_bearer_refresh_router() -> APIRouter:
     router = APIRouter()
 
-    @router.post("/refresh")
+    @router.post("/refresh", status_code=status.HTTP_200_OK)
     async def bearer_refresh(
         body: BearerRefreshSchema,
         refresh_service: Annotated[
