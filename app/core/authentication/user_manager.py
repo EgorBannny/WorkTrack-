@@ -44,7 +44,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         request: Optional["Request"] = None,
         response: Optional["Response"] = None,
     ):
-        refresh_token = self._refresh_token_service.write_token(user)
+        refresh_token = await self._refresh_token_service.write_token(user)
 
         await self._refresh_token_service.redis.set(
             f"user_version:{user.id}",
@@ -78,7 +78,9 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         log.info("on_after_login: выдан refresh токен user_id=%s", user.id)
 
     async def increment_token_version(self, user: User) -> User:
-        user = await self.user_db.update(user, {"token_version": user.token_version + 1})
+        user = await self.user_db.update(
+            user, {"token_version": user.token_version + 1}
+        )
         await self._refresh_token_service.redis.set(
             f"user_version:{user.id}",
             user.token_version,
@@ -91,7 +93,9 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         request: Optional["Request"] = None,
     ):
         await self.increment_token_version(user)
-        log.info("on_after_reset_password: token_version incremented user_id=%s", user.id)
+        log.info(
+            "on_after_reset_password: token_version incremented user_id=%s", user.id
+        )
 
     async def on_after_register(
         self,

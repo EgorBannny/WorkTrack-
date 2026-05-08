@@ -11,21 +11,14 @@ from app.core.schemas import UserRead, UserUpdate
 from app.api.dependencies.authentication import fastapi_users, auth_guard
 from app.api.dependencies.uploads import ValidatedAvatar, validate_avatar
 
-users_router = APIRouter(
-    prefix=settings.api.prefix.users,
-    tags=[settings.api.tags.users],
-)
-
-users_router.include_router(
-    router=fastapi_users.get_users_router(
-        user_schema=UserRead,
-        user_update_schema=UserUpdate,
-    ),
+avatars_router = APIRouter(
+    prefix=settings.api.prefix.avatar,
+    tags=[settings.api.tags.avatar],
 )
 
 
-@users_router.get(
-    "/{user_id}/avatar",
+@avatars_router.get(
+    "/{user_id}",
     status_code=status.HTTP_200_OK,
     dependencies=[auth_guard],
 )
@@ -40,8 +33,8 @@ async def get_avatar(user_id: uuid.UUID):
     return FileResponse(settings.uploads.default_avatar)
 
 
-@users_router.delete(
-    "/me/avatar",
+@avatars_router.delete(
+    "/me",
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_avatar(current_user: Annotated[User, auth_guard]):
@@ -55,8 +48,8 @@ async def delete_avatar(current_user: Annotated[User, auth_guard]):
         file.unlink()
 
 
-@users_router.post(
-    "/me/avatar",
+@avatars_router.post(
+    "/me",
     response_model=UserRead,
     status_code=status.HTTP_200_OK,
 )

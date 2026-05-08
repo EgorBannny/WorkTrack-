@@ -6,6 +6,7 @@ class APITags(BaseModel):
     cookie: str = "Cookie"
     bearer: str = "Bearer"
     users: str = "Users"
+    avatar: str = "Avatar"
 
 
 class APIPrefix(BaseModel):
@@ -14,6 +15,7 @@ class APIPrefix(BaseModel):
     cookie: str = "/cookie"
     bearer: str = "/bearer"
     users: str = "/users"
+    avatar: str = "/avatar"
 
 
 class APIConfig(BaseModel):
