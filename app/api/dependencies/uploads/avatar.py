@@ -8,9 +8,8 @@ from app.core.config.main_config import settings
 
 
 class ValidatedAvatar:
-    def __init__(self, content: bytes, ext: str):
+    def __init__(self, content: bytes):
         self.content = content
-        self.ext = ext
 
 
 async def validate_avatar(
@@ -51,5 +50,4 @@ async def validate_avatar(
             f"Image resolution is too large. Maximum is {cfg.max_resolution}x{cfg.max_resolution}px",
         )
 
-    ext = image.format.lower()
-    return ValidatedAvatar(content=content, ext="jpg" if ext == "jpeg" else ext)
+    return ValidatedAvatar(content=content)
