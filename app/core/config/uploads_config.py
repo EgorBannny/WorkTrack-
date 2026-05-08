@@ -18,3 +18,7 @@ class UploadsConfig(BaseModel):
     @property
     def avatars_dir(self) -> Path:
         return self.base_dir / "avatars"
+
+    @property
+    def default_avatar(self) -> Path:
+        return self.base_dir / "avatars" / "default.png"
