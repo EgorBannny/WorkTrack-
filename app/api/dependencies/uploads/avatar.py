@@ -8,8 +8,9 @@ from app.core.config.main_config import settings
 
 
 class ValidatedAvatar:
-    def __init__(self, content: bytes):
+    def __init__(self, content: bytes, ext: str):
         self.content = content
+        self.ext = ext
 
 
 async def validate_avatar(
@@ -42,4 +43,4 @@ async def validate_avatar(
     if w != h:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Avatar must be square")
 
-    return ValidatedAvatar(content=content)
+    return ValidatedAvatar(content=content, ext=image.format.lower())
