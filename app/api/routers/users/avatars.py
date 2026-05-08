@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.core.models import User
 from app.core.schemas import UserRead, UserUpdate
 
-from app.api.dependencies.authentication import fastapi_users, auth_guard
+from app.api.dependencies.authentication import auth_guard
 from app.api.dependencies.uploads import ValidatedAvatar, validate_avatar
 
 avatars_router = APIRouter(

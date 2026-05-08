@@ -109,7 +109,7 @@ def make_bearer_logout_all_router() -> APIRouter:
     async def bearer_logout_all(
         user: Annotated[
             User,
-            Depends(fastapi_users.current_user(active=True)),
+            auth_guard,
         ],
         user_manager: Annotated[UserManager, Depends(get_user_manager)],
     ):

@@ -28,7 +28,7 @@ async def validate_avatar(
         image = Image.open(BytesIO(content))
         image.verify()
     except UnidentifiedImageError:
-        raise HTTPException(400, "File is not a valid image")
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "File is not a valid image")
 
     image = Image.open(BytesIO(content))
 
@@ -39,15 +39,7 @@ async def validate_avatar(
         )
 
     w, h = image.size
-    if w < cfg.min_resolution or h < cfg.min_resolution:
-        raise HTTPException(
-            status.HTTP_400_BAD_REQUEST,
-            f"Image resolution is too small. Minimum is {cfg.min_resolution}x{cfg.min_resolution}px",
-        )
-    if w > cfg.max_resolution or h > cfg.max_resolution:
-        raise HTTPException(
-            status.HTTP_400_BAD_REQUEST,
-            f"Image resolution is too large. Maximum is {cfg.max_resolution}x{cfg.max_resolution}px",
-        )
+    if w != h:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Avatar must be square")
 
     return ValidatedAvatar(content=content)
