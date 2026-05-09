@@ -7,6 +7,7 @@ __all__ = (
     "OrganizationCreate",
     "OrganizationUpdate",
     "UserOrganizationRead",
+    "MemberUpdate",
     "InviteRead",
     "InviteCreate",
 )
@@ -19,4 +20,5 @@ from .organization import (
     OrganizationUpdate,
 )
 from .user_organization import UserOrganizationRead
+from .members import MemberUpdate
 from .invitations import InviteRead, InviteCreate
