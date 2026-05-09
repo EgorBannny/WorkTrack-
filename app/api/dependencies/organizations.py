@@ -20,8 +20,8 @@ async def get_org_or_404(
 
 
 async def get_current_user_organization(
-    org: Annotated[Organization, Depends(get_org_or_404)],
     current_user: Annotated[User, auth_guard],
+    org: Annotated[Organization, Depends(get_org_or_404)],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ) -> UserOrganization:
     uo = await get_user_organization(session, current_user.id, org.id)

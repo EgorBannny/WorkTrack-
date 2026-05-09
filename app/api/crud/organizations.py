@@ -12,9 +12,12 @@ async def get_org_by_id(
     org_id: uuid.UUID,
 ) -> Organization | None:
     result = await session.execute(
-        select(Organization).where(Organization.id == org_id)
+        select(Organization).where(
+            Organization.id == org_id,
+            Organization.is_active == True,
+        )
     )
-    return result.scоalar_one_or_none()
+    return result.scalar_one_or_none()
 
 
 async def get_user_organizations(
@@ -24,6 +27,8 @@ async def get_user_organizations(
     result = await session.execute(
         select(UserOrganization)
         .where(UserOrganization.user_id == user_id)
+        .join(UserOrganization.organization)
+        .where(Organization.is_active == True)
         .options(selectinload(UserOrganization.organization))
     )
     return list(result.scalars().all())

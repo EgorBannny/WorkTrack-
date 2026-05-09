@@ -1,3 +1,6 @@
-__all__ = ("OrgRole",)
+__all__ = (
+    "OrgRole",
+    "ROLE_HIERARCHY",
+)
 
-from .organization import OrgRole
+from .organization import OrgRole, ROLE_HIERARCHY

@@ -60,8 +60,8 @@ async def get_my_organizations(
     status_code=status.HTTP_200_OK,
 )
 async def get_organization(
-    org: Annotated[Organization, Depends(get_org_or_404)],
     uo: Annotated[UserOrganization, Depends(get_current_user_organization)],
+    org: Annotated[Organization, Depends(get_org_or_404)],
 ):
     return OrganizationWithRoleRead(
         id=org.id,

@@ -7,13 +7,13 @@ from .helpers import Base
 from .mixins import UUIDPKMixin, TimestampMixin
 
 if TYPE_CHECKING:
-    from .user_organization import Organization
+    from .user_organization import UserOrganization
 
 
 class Organization(Base, UUIDPKMixin, TimestampMixin):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
-    user_organizations: Mapped[list["Organization"]] = relationship(
+    user_organizations: Mapped[list["UserOrganization"]] = relationship(
         back_populates="organization"
     )
