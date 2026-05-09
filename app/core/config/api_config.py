@@ -7,6 +7,7 @@ class APITags(BaseModel):
     bearer: str = "Bearer"
     users: str = "Users"
     avatar: str = "Avatar"
+    orgs: str = "Organizations"
 
 
 class APIPrefix(BaseModel):
@@ -16,6 +17,7 @@ class APIPrefix(BaseModel):
     bearer: str = "/bearer"
     users: str = "/users"
     avatar: str = "/avatar"
+    orgs: str = "/orgs"
 
 
 class APIConfig(BaseModel):
