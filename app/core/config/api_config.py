@@ -8,6 +8,8 @@ class APITags(BaseModel):
     users: str = "Users"
     avatar: str = "Avatar"
     orgs: str = "Organizations"
+    members: str = "Members"
+    invitations: str = "Invitations"
 
 
 class APIPrefix(BaseModel):
@@ -18,6 +20,7 @@ class APIPrefix(BaseModel):
     users: str = "/users"
     avatar: str = "/avatar"
     orgs: str = "/orgs"
+    invitations: str = "/invitations"
 
 
 class APIConfig(BaseModel):
