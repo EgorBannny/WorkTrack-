@@ -21,7 +21,9 @@ class UserOrganization(Base, TimestampMixin):
         ForeignKey("organizations.id", ondelete="CASCADE"), primary_key=True
     )
     role: Mapped[OrgRole] = mapped_column(SAEnum(OrgRole), nullable=False)
-    position: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    position: Mapped[str | None] = mapped_column(
+        String(100), default=None, nullable=True
+    )
 
     user: Mapped["User"] = relationship(back_populates="user_organizations")
     organization: Mapped["Organization"] = relationship(
