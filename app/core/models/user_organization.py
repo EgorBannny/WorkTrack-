@@ -4,8 +4,8 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from helpers import Base
-from mixins import TimestampMixin
+from .helpers import Base
+from .mixins import TimestampMixin
 from app.enums import OrgRole
 
 if TYPE_CHECKING:
