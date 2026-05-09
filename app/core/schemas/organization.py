@@ -4,14 +4,6 @@ from pydantic import BaseModel, ConfigDict
 from app.enums import OrgRole
 
 
-class OrganizationCreate(BaseModel):
-    name: str
-
-
-class OrganizationUpdate(BaseModel):
-    name: str | None = None
-
-
 class OrganizationRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -24,3 +16,11 @@ class OrganizationRead(BaseModel):
 class OrganizationWithRoleRead(OrganizationRead):
     role: OrgRole
     position: str | None = None
+
+
+class OrganizationCreate(BaseModel):
+    name: str
+
+
+class OrganizationUpdate(BaseModel):
+    name: str | None = None
