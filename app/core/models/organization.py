@@ -15,6 +15,6 @@ class Organization(Base, UUIDPKMixin, TimestampMixin):
     slug: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
-    user_organizations: Mapped["Organization"] = relationship(
+    user_organizations: Mapped[list["Organization"]] = relationship(
         back_populates="organization"
     )

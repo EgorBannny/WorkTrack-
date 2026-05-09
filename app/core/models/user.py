@@ -14,7 +14,9 @@ class User(Base, SQLAlchemyBaseUserTableUUID):
     token_version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     display_name: Mapped[str] = mapped_column(String(100), nullable=False)
 
-    user_organizations: Mapped["UserOrganization"] = relationship(back_populates="user")
+    user_organizations: Mapped[list["UserOrganization"]] = relationship(
+        back_populates="user"
+    )
 
     @classmethod
     def get_db(cls, session: "AsyncSession") -> SQLAlchemyUserDatabase:
