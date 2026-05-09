@@ -6,7 +6,7 @@ from fastapi.responses import FileResponse
 
 from app.core.config import settings
 from app.core.models import User
-from app.core.schemas import UserRead, UserUpdate
+from app.core.schemas import UserRead
 
 from app.api.dependencies.authentication import auth_guard
 from app.api.dependencies.uploads import ValidatedAvatar, validate_avatar
