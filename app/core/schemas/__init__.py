@@ -6,6 +6,7 @@ __all__ = (
     "OrganizationWithRoleRead",
     "OrganizationCreate",
     "OrganizationUpdate",
+    "UserOrganizationRead",
     "InviteRead",
     "InviteCreate",
 )
@@ -17,4 +18,5 @@ from .organization import (
     OrganizationCreate,
     OrganizationUpdate,
 )
+from .user_organization import UserOrganizationRead
 from .invitations import InviteRead, InviteCreate
