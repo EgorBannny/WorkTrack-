@@ -37,8 +37,8 @@ async def check_invitation(
             status.HTTP_404_NOT_FOUND, "Invitation not found or expired"
         )
 
-    org_id = await get_org_by_id(session, uuid.UUID(data["org_id"]))
-    if not org_id:
+    org = await get_org_by_id(session, uuid.UUID(data["org_id"]))
+    if not org:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Organization not found")
 
     result = await session.execute(select(User).where(User.email == data["email"]))
@@ -73,11 +73,11 @@ async def accept_invitation(
             status.HTTP_403_FORBIDDEN, "Invitation is for a different email"
         )
 
-    org_id = await get_org_by_id(session, uuid.UUID(data["org_id"]))
-    if not org_id:
+    org = await get_org_by_id(session, uuid.UUID(data["org_id"]))
+    if not org:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Organization not found")
 
-    already_member = await get_member(session, org_id, current_user.id)
+    already_member = await get_member(session, org.id, current_user.id)
     if already_member:
         raise HTTPException(
             status.HTTP_409_CONFLICT, "Already a member of this organization"
@@ -86,7 +86,7 @@ async def accept_invitation(
     await create_membership(
         session,
         user_id=current_user.id,
-        org_id=org_id,
+        org_id=org.id,
         role=OrgRole(data["role"]),
         position=data["position"],
     )
