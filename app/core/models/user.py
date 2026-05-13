@@ -7,6 +7,7 @@ from .helpers import Base
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
     from .user_organization import UserOrganization
+    from .user_project import UserProject
 
 
 class User(Base, SQLAlchemyBaseUserTableUUID):
@@ -17,6 +18,8 @@ class User(Base, SQLAlchemyBaseUserTableUUID):
     user_organizations: Mapped[list["UserOrganization"]] = relationship(
         back_populates="user"
     )
+
+    user_projects: Mapped[list["UserProject"]] = relationship(back_populates="user")
 
     @classmethod
     def get_db(cls, session: "AsyncSession") -> SQLAlchemyUserDatabase:

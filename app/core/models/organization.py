@@ -8,6 +8,7 @@ from .mixins import UUIDPKMixin, TimestampMixin
 
 if TYPE_CHECKING:
     from .user_organization import UserOrganization
+    from .project import Project
 
 
 class Organization(Base, UUIDPKMixin, TimestampMixin):
@@ -17,3 +18,5 @@ class Organization(Base, UUIDPKMixin, TimestampMixin):
     user_organizations: Mapped[list["UserOrganization"]] = relationship(
         back_populates="organization"
     )
+
+    projects: Mapped[list["Project"]] = relationship(back_populates="organization")
