@@ -1,4 +1,3 @@
-import uuid
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -25,10 +24,13 @@ from app.core.schemas import (
 )
 from app.enums import OrgRole
 
+from .members import members_router
+
 organizations_router = APIRouter(
     prefix=settings.api.prefix.orgs,
     tags=[settings.api.tags.orgs],
 )
+organizations_router.include_router(router=members_router)
 
 
 @organizations_router.get(
