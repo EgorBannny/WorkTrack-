@@ -42,8 +42,8 @@ members_router = APIRouter(tags=[settings.api.tags.members])
     status_code=status.HTTP_200_OK,
 )
 async def get_members(
-    org: Annotated[Organization, Depends(get_org_or_404)],
     _: Annotated[UserOrganization, Depends(get_current_user_organization)],
+    org: Annotated[Organization, Depends(get_org_or_404)],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     return await get_org_members(session, org.id)
@@ -55,9 +55,9 @@ async def get_members(
 )
 async def invite_member(
     data: InviteCreate,
+    current_user: Annotated[User, auth_guard],
     org: Annotated[Organization, Depends(get_org_or_404)],
     _uo: Annotated[UserOrganization, Depends(require_role(OrgRole.admin))],
-    current_user: Annotated[User, auth_guard],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
     redis: Annotated[Redis, Depends(redis_helper.client_getter)],
 ):
@@ -88,8 +88,8 @@ async def invite_member(
 )
 async def update_org_member(
     data: MemberUpdate,
-    target: Annotated[UserOrganization, Depends(get_member_or_404)],
     _uo: Annotated[UserOrganization, Depends(require_role(OrgRole.admin))],
+    target: Annotated[UserOrganization, Depends(get_member_or_404)],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     if data.role is not None:
@@ -108,8 +108,8 @@ async def update_org_member(
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def remove_org_member(
-    target: Annotated[UserOrganization, Depends(get_member_or_404)],
     current_uo: Annotated[UserOrganization, Depends(require_role(OrgRole.admin))],
+    target: Annotated[UserOrganization, Depends(get_member_or_404)],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     if target.role == OrgRole.owner:
