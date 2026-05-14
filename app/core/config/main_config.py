@@ -5,6 +5,7 @@ from .database_config import DatabaseConfig
 from .api_auth_config import AuthConfig
 from .uploads_config import UploadsConfig
 from .invitations_config import InvitationsConfig
+from .cors_config import CORSConfig
 
 
 class Settings(BaseSettings):
@@ -20,6 +21,7 @@ class Settings(BaseSettings):
     auth: AuthConfig
     uploads: UploadsConfig = UploadsConfig()
     invitations: InvitationsConfig = InvitationsConfig()
+    cors: CORSConfig
 
 
 settings = Settings()
