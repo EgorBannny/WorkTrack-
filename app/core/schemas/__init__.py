@@ -18,7 +18,7 @@ from .organization import (
     OrganizationWithRoleRead,
     OrganizationCreate,
     OrganizationUpdate,
+    UserOrganizationRead,
 )
-from .user_organization import UserOrganizationRead
 from .members import MemberUpdate
 from .invitations import InviteRead, InviteCreate
