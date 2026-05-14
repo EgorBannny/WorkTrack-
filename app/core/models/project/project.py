@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from ..organization import Organization
     from .user_project import UserProject
     from ..user import User
+    from ..task import Task
 
 
 class Project(Base, UUIDPKMixin, TimestampMixin):
@@ -33,3 +34,4 @@ class Project(Base, UUIDPKMixin, TimestampMixin):
     organization: Mapped["Organization"] = relationship(back_populates="projects")
     user_projects: Mapped[list["UserProject"]] = relationship(back_populates="project")
     creator: Mapped["User | None"] = relationship(foreign_keys=[created_by])
+    tasks: Mapped[list["Task"]] = relationship(back_populates="project")
