@@ -8,11 +8,13 @@ interface ThemeStore {
   setTheme: (theme: Theme) => void
 }
 
+function getSystemTheme(): 'light' | 'dark' {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
 function applyTheme(theme: Theme) {
-  const root = document.documentElement
-  if (theme === 'dark') root.setAttribute('data-theme', 'dark')
-  else if (theme === 'light') root.setAttribute('data-theme', 'light')
-  else root.removeAttribute('data-theme')
+  const effective = theme === 'system' ? getSystemTheme() : theme
+  document.documentElement.setAttribute('data-theme', effective)
 }
 
 export const useThemeStore = create<ThemeStore>()(
@@ -27,3 +29,5 @@ export const useThemeStore = create<ThemeStore>()(
     { name: 'wt-theme' },
   ),
 )
+
+export { applyTheme }

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+@variant dark (&:is([data-theme="dark"], [data-theme="dark"] *));
+
 /* ─── Light theme (default) ─────────────────────────────── */
 :root {
   /* Font */
