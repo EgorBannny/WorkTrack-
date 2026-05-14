@@ -25,12 +25,14 @@ from app.core.schemas import (
 from app.enums import OrgRole
 
 from .members import members_router
+from .projects import projects_router
 
 organizations_router = APIRouter(
     prefix=settings.api.prefix.orgs,
     tags=[settings.api.tags.orgs],
 )
 organizations_router.include_router(router=members_router)
+organizations_router.include_router(router=projects_router)
 
 
 @organizations_router.get(
