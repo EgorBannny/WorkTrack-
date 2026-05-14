@@ -1,8 +1,9 @@
 import json
 import logging
+import re
 import uuid
 from typing import Optional, TYPE_CHECKING
-from fastapi_users import BaseUserManager, UUIDIDMixin
+from fastapi_users import BaseUserManager, UUIDIDMixin, InvalidPasswordException
 from fastapi_users.db import SQLAlchemyUserDatabase
 from starlette.responses import JSONResponse
 
@@ -37,6 +38,23 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     ):
         super().__init__(user_db)
         self._refresh_token_service = refresh_token_service
+
+    async def validate_password(self, password: str, user=None) -> None:  # noqa: ARG002
+        errors = []
+        if len(password) < 8:
+            errors.append("минимум 8 символов")
+        if not re.search(r"[A-ZА-ЯЁ]", password):
+            errors.append("заглавная буква")
+        if not re.search(r"[a-zа-яё]", password):
+            errors.append("строчная буква")
+        if not re.search(r"[0-9]", password):
+            errors.append("цифра")
+        if not re.search(r"[^A-Za-zА-ЯЁа-яё0-9\s]", password):
+            errors.append("спецсимвол (не пробел)")
+        if re.search(r"\s", password):
+            errors.append("пробелы запрещены")
+        if errors:
+            raise InvalidPasswordException(reason=f"Пароль должен содержать: {', '.join(errors)}")
 
     async def on_after_login(
         self,
