@@ -6,16 +6,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.crud.projects import get_project_by_id, get_user_project
 from app.api.dependencies.authentication import auth_guard
 from app.api.dependencies.organizations import get_current_user_organization
-from app.core.models import db_helper, User, Organization, Project, UserProject
+from app.core.models import db_helper, User, UserOrganization, Project, UserProject
 
 
 async def get_project_or_404(
     project_id: uuid.UUID,
-    _: Annotated[Organization, Depends(get_current_user_organization)],
+    uo: Annotated[UserOrganization, Depends(get_current_user_organization)],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ) -> Project:
     project = await get_project_by_id(session, project_id)
-    if not project:
+    if not project or project.org_id != uo.org_id:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Project not found")
     return project
 
