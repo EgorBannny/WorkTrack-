@@ -10,6 +10,11 @@ __all__ = (
     "MemberUpdate",
     "InviteRead",
     "InviteCreate",
+    "TaskCreate",
+    "TaskUpdate",
+    "TaskPositionUpdate",
+    "TaskRead",
+    "TaskHistoryRead",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -22,3 +27,10 @@ from .organization import (
 )
 from .members import MemberUpdate
 from .invitations import InviteRead, InviteCreate
+from .task import (
+    TaskCreate,
+    TaskUpdate,
+    TaskPositionUpdate,
+    TaskRead,
+    TaskHistoryRead,
+)
