@@ -11,6 +11,7 @@ class APITags(BaseModel):
     members: str = "Members"
     invitations: str = "Invitations"
     projects: str = "Projects"
+    tasks: str = "Tasks"
 
 
 class APIPrefix(BaseModel):
