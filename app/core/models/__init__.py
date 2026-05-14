@@ -10,7 +10,5 @@ __all__ = (
 )
 from .helpers import db_helper, redis_helper, Base
 from .user import User
-from .organization import Organization
-from .user_organization import UserOrganization
-from .project import Project
-from .user_project import UserProject
+from .organization import Organization, UserOrganization
+from .project import Project, UserProject

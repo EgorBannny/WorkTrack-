@@ -4,13 +4,13 @@ from datetime import datetime
 from sqlalchemy import String, Boolean, Text, ForeignKey, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .helpers import Base
-from .mixins import UUIDPKMixin, TimestampMixin
+from ..helpers import Base
+from ..mixins import UUIDPKMixin, TimestampMixin
 
 if TYPE_CHECKING:
-    from .organization import Organization
+    from ..organization import Organization
     from .user_project import UserProject
-    from .user import User
+    from ..user import User
 
 
 class Project(Base, UUIDPKMixin, TimestampMixin):

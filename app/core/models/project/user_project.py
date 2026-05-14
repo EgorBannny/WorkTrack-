@@ -3,11 +3,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .helpers import Base
-from .mixins import TimestampMixin
+from ..helpers import Base
+from ..mixins import TimestampMixin
 
 if TYPE_CHECKING:
-    from .user import User
+    from ..user import User
     from .project import Project
 
 
