@@ -4,16 +4,6 @@ from pydantic import BaseModel, ConfigDict
 from .user import UserRead
 
 
-class ProjectCreate(BaseModel):
-    name: str
-    description: str | None = None
-
-
-class ProjectUpdate(BaseModel):
-    name: str | None = None
-    description: str | None = None
-
-
 class ProjectRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -34,3 +24,13 @@ class UserProjectRead(BaseModel):
     project_id: uuid.UUID
     created_at: datetime
     user: UserRead
+
+
+class ProjectCreate(BaseModel):
+    name: str
+    description: str | None = None
+
+
+class ProjectUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None

@@ -19,14 +19,6 @@ class OrganizationWithRoleRead(OrganizationRead):
     position: str | None = None
 
 
-class OrganizationCreate(BaseModel):
-    name: str
-
-
-class OrganizationUpdate(BaseModel):
-    name: str | None = None
-
-
 class UserOrganizationRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -36,3 +28,11 @@ class UserOrganizationRead(BaseModel):
     postition: str | None = None
     created_at: datetime
     user: UserRead
+
+
+class OrganizationCreate(BaseModel):
+    name: str
+
+
+class OrganizationUpdate(BaseModel):
+    name: str | None = None
