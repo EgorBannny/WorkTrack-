@@ -5,7 +5,7 @@ class DatabasePostgresqlConfig(BaseModel):
     url: PostgresDsn
     echo: bool = False
     echo_pool: bool = False
-    pool_size: int = 50
+    pool_size: int = 5
     max_overflow: int = 10
 
     naming_convention: dict[str, str] = {
