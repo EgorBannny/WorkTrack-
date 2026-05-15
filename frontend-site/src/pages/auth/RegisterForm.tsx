@@ -62,6 +62,7 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
           <Label htmlFor="reg-name">Имя</Label>
           <Input
             id="reg-name"
+            autoComplete="off"
             placeholder="Иван Иванов"
             aria-invalid={!!errors.display_name}
             {...register('display_name')}
@@ -76,6 +77,7 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
           <Input
             id="reg-email"
             type="email"
+            autoComplete="off"
             placeholder="name@company.com"
             aria-invalid={!!errors.email}
             {...register('email')}
@@ -88,6 +90,7 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
           <Input
             id="reg-password"
             type="password"
+            autoComplete="new-password"
             placeholder="Минимум 8 символов"
             aria-invalid={!!errors.password}
             {...register('password')}

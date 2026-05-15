@@ -13,4 +13,7 @@ export default defineConfig({
       '/api': 'http://localhost:8000',
     },
   },
+  optimizeDeps: {
+    include: ['@base-ui/react/button'],
+  },
 })

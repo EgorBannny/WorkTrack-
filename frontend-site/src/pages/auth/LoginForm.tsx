@@ -48,6 +48,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
           <Input
             id="login-email"
             type="email"
+            autoComplete="email"
             placeholder="name@company.com"
             aria-invalid={!!errors.email}
             {...register('email')}
@@ -60,6 +61,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
           <Input
             id="login-password"
             type="password"
+            autoComplete="current-password"
             placeholder="••••••••"
             aria-invalid={!!errors.password}
             {...register('password')}
