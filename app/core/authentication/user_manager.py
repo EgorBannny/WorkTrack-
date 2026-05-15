@@ -54,7 +54,9 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         if re.search(r"\s", password):
             errors.append("пробелы запрещены")
         if errors:
-            raise InvalidPasswordException(reason=f"Пароль должен содержать: {', '.join(errors)}")
+            raise InvalidPasswordException(
+                reason=f"Пароль должен содержать: {', '.join(errors)}"
+            )
 
     async def on_after_login(
         self,
@@ -86,7 +88,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
                 key=settings.auth.cookie.refresh_name,
                 value=refresh_token,
                 max_age=settings.auth.jwt.refresh_token_lifetime_seconds,
-                path=settings.auth.cookie.path,
+                path=settings.auth.cookie.refresh_path,
                 domain=settings.auth.cookie.domain,
                 secure=settings.auth.cookie.secure,
                 httponly=settings.auth.cookie.httponly,

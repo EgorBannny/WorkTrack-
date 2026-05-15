@@ -27,7 +27,9 @@ async def _get_user_and_rotate(
 ) -> tuple[str, str]:
     payload = await refresh_service.read_token(old_refresh_token)
     if payload is None:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid or expired refresh token")
+        raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED, "Invalid or expired refresh token"
+        )
 
     try:
         user = await user_manager.get(user_manager.parse_id(payload["sub"]))
@@ -83,7 +85,7 @@ def make_cookie_refresh_router() -> APIRouter:
             key=settings.auth.cookie.refresh_name,
             value=new_refresh,
             max_age=settings.auth.jwt.refresh_token_lifetime_seconds,
-            path=settings.auth.cookie.path,
+            path=settings.auth.cookie.refresh_path,
             domain=settings.auth.cookie.domain,
             secure=settings.auth.cookie.secure,
             httponly=settings.auth.cookie.httponly,

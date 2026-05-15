@@ -33,6 +33,7 @@ class AuthCookieConfig(BaseModel):
     refresh_name: str = "refresh_token"
     max_age: int = EXPIRE_SECONDS
     path: str = "/"
+    refresh_path: str = "/api/auth/cookie"
     domain: str | None = None  # TODO: Поменять на проде
     secure: bool = False  # TODO: Поменять на проде
     httponly: bool = True
