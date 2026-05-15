@@ -4,8 +4,11 @@ __pycache__/
 *.pyo
 .env
 .env.*
+.env.production
 certs/
 uploads/
+!uploads/avatars/default.png
 frontend-site/
 frontend-mobile/
 .git/
+deploy/
