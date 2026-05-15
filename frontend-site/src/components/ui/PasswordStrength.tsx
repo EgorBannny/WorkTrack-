@@ -51,7 +51,3 @@ export function PasswordStrength({ password }: { password: string }) {
     </div>
   )
 }
-
-export function validatePassword(password: string): boolean {
-  return CRITERIA.every((c) => c.test(password))
-}
