@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { QueryClient } from '@tanstack/react-query'
+import { useAuthStore } from '@/store/auth.store'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,7 +30,6 @@ client.interceptors.response.use(
     }
 
     if (original.url?.includes('/api/auth/cookie/refresh')) {
-      const { useAuthStore } = await import('@/store/auth.store')
       useAuthStore.getState().setUser(null)
       window.location.href = '/'
       return Promise.reject(error)
@@ -52,7 +52,6 @@ client.interceptors.response.use(
       return client(original)
     } catch (refreshError) {
       processQueue(refreshError)
-      const { useAuthStore } = await import('@/store/auth.store')
       useAuthStore.getState().setUser(null)
       window.location.href = '/'
       return Promise.reject(refreshError)
