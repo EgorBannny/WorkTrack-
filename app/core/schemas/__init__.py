@@ -19,6 +19,10 @@ __all__ = (
     "CommentCreate",
     "CommentUpdate",
     "AttachmentRead",
+    "OverviewRead",
+    "MemberWorkloadRead",
+    "TimelineEntryRead",
+    "PrioritiesRead",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -40,3 +44,9 @@ from .task import (
 )
 from .comment import CommentRead, CommentCreate, CommentUpdate
 from .attachment import AttachmentRead
+from .analytics import (
+    OverviewRead,
+    MemberWorkloadRead,
+    TimelineEntryRead,
+    PrioritiesRead,
+)
