@@ -9,9 +9,28 @@ class AvatarConfig(BaseModel):
     max_file_size: int = 5 * 1024 * 1024
 
 
+class AttachmentConfig(BaseModel):
+    allowed_mime_types: set[str] = {
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/zip",
+        "text/plain",
+        "text/csv",
+    }
+    max_file_size: int = 20 * 1024 * 1024
+
+
 class UploadsConfig(BaseModel):
     base_dir: Path = BASE_DIR / "uploads"
     avatar: AvatarConfig = AvatarConfig()
+    attachment: AttachmentConfig = AttachmentConfig()
 
     @property
     def avatars_dir(self) -> Path:
@@ -20,3 +39,19 @@ class UploadsConfig(BaseModel):
     @property
     def default_avatar(self) -> Path:
         return self.base_dir / "avatars" / "default.png"
+
+    def attachment_path(
+        self,
+        org_id,
+        project_id,
+        task_id,
+        attachment_id,
+    ) -> Path:
+        return (
+            self.base_dir
+            / "attachments"
+            / str(org_id)
+            / str(project_id)
+            / str(task_id)
+            / str(attachment_id)
+        )
