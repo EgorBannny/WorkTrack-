@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from ..project import Project
     from ..user import User
     from .task_history import TaskHistory
+    from .comment import Comment
 
 
 class Task(Base, UUIDPKMixin, TimestampMixin):
@@ -46,3 +47,4 @@ class Task(Base, UUIDPKMixin, TimestampMixin):
     creator: Mapped["User | None"] = relationship(foreign_keys=[created_by])
     assignee: Mapped["User | None"] = relationship(foreign_keys=[assignee_id])
     history: Mapped[list["TaskHistory"]] = relationship(back_populates="task")
+    comments: Mapped[list["Comment"]] = relationship(back_populates="task")
