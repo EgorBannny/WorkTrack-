@@ -19,6 +19,18 @@ async def get_task_comments(
     return list(result.scalars().all())
 
 
+async def get_comment_by_id(
+    session: AsyncSession,
+    comment_id: uuid.UUID,
+) -> Comment | None:
+    result = await session.execute(
+        select(Comment)
+        .where(Comment.id == comment_id)
+        .options(selectinload(Comment.author))
+    )
+    return result.scalar_one_or_none()
+
+
 async def create_comment(
     session: AsyncSession,
     task_id: uuid.UUID,
