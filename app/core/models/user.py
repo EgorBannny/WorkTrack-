@@ -6,8 +6,8 @@ from .helpers import Base
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
-    from .user_organization import UserOrganization
-    from .user_project import UserProject
+    from .organization import UserOrganization
+    from .project import UserProject
 
 
 class User(Base, SQLAlchemyBaseUserTableUUID):

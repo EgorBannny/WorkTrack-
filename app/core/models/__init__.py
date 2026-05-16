@@ -10,9 +10,10 @@ __all__ = (
     "Task",
     "TaskHistory",
     "Comment",
+    "Attachment",
 )
 from .helpers import db_helper, redis_helper, Base
 from .user import User
 from .organization import Organization, UserOrganization
 from .project import Project, UserProject
-from .task import Task, TaskHistory, Comment
+from .task import Task, TaskHistory, Comment, Attachment
