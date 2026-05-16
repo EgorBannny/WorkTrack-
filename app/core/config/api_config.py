@@ -13,6 +13,7 @@ class APITags(BaseModel):
     projects: str = "Projects"
     tasks: str = "Tasks"
     comments: str = "Comments"
+    attachments: str = "Attachments"
 
 
 class APIPrefix(BaseModel):
