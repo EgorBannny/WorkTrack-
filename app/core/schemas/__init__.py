@@ -15,6 +15,9 @@ __all__ = (
     "TaskPositionUpdate",
     "TaskRead",
     "TaskHistoryRead",
+    "CommentRead",
+    "CommentCreate",
+    "CommentUpdate",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -34,3 +37,4 @@ from .task import (
     TaskRead,
     TaskHistoryRead,
 )
+from .comment import CommentRead, CommentCreate, CommentUpdate
