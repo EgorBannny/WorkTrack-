@@ -18,6 +18,7 @@ __all__ = (
     "CommentRead",
     "CommentCreate",
     "CommentUpdate",
+    "AttachmentRead",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -38,3 +39,4 @@ from .task import (
     TaskHistoryRead,
 )
 from .comment import CommentRead, CommentCreate, CommentUpdate
+from .attachment import AttachmentRead
