@@ -221,3 +221,6 @@ certs/
 .claudeignore
 .env.production
 uploads/
+deploy-front.sh
+deploy-back.sh
+deploy.sh
