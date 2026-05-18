@@ -1,10 +1,16 @@
+# utils
 import uuid
+
+# fastapi
 from fastapi import Depends
 from fastapi_users import FastAPIUsers
-from app.api.dependencies.authentication import get_user_manager
+
+# inside the package
+from .user_manager import get_user_manager
+
+# core
 from app.core.models import User
 from app.core.authentication import auth_cookie_backend, auth_bearer_backend
-
 
 fastapi_users = FastAPIUsers[User, uuid.UUID](
     get_user_manager,
