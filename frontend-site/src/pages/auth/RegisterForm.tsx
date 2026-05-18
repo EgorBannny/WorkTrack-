@@ -43,7 +43,9 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
         await apiLogin(data.email, data.password)
         const user = await apiMe()
         setUser(user)
-        navigate('/orgs')
+        const intended = sessionStorage.getItem('wt-intended')
+        sessionStorage.removeItem('wt-intended')
+        navigate(intended ?? '/orgs')
       } else {
         onSwitch()
       }
