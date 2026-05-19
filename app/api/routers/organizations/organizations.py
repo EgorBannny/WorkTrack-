@@ -116,8 +116,8 @@ async def create_organization(
 )
 async def update_organization(
     data: OrganizationUpdate,
-    org: Annotated[Organization, Depends(get_org_or_404)],
     _: Annotated[UserOrganization, Depends(require_role(OrgRole.admin))],
+    org: Annotated[Organization, Depends(get_org_or_404)],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     update_data = data.model_dump(exclude_unset=True)
@@ -131,8 +131,8 @@ async def update_organization(
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def archive_organization(
-    org: Annotated[Organization, Depends(get_org_or_404)],
     _: Annotated[UserOrganization, Depends(require_role(OrgRole.owner))],
+    org: Annotated[Organization, Depends(get_org_or_404)],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     if not org.is_active:
