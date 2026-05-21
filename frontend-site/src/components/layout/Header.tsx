@@ -39,7 +39,7 @@ export function Header({ onMenuClick, onAvatarClick }: HeaderProps) {
         className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-label="Профиль"
       >
-        <Avatar userId={user?.id} name={user?.display_name} size="md" />
+        <Avatar src={user ? `/api/users/avatar/${user.id}` : null} name={user?.display_name} size="md" />
       </button>
     </header>
   )

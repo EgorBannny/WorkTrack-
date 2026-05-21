@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 interface AvatarProps {
-  userId?: string | null
+  src?: string | null
   name?: string | null
   size?: 'sm' | 'md' | 'lg'
   className?: string
@@ -18,7 +19,9 @@ function getInitials(name?: string | null): string {
   return name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()
 }
 
-export function Avatar({ userId, name, size = 'md', className }: AvatarProps) {
+export function Avatar({ src, name, size = 'md', className }: AvatarProps) {
+  const [imgError, setImgError] = useState(false)
+
   return (
     <div className={cn(
       'rounded-full shrink-0 overflow-hidden font-medium',
@@ -26,11 +29,12 @@ export function Avatar({ userId, name, size = 'md', className }: AvatarProps) {
       sizes[size],
       className,
     )}>
-      {userId
+      {src && !imgError
         ? <img
-            src={`/api/users/avatar/${userId}`}
+            src={src}
             alt={name ?? ''}
             className="size-full object-cover"
+            onError={() => setImgError(true)}
           />
         : getInitials(name)
       }

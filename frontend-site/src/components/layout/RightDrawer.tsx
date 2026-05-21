@@ -45,7 +45,7 @@ export function RightDrawer({ isOpen, onClose }: RightDrawerProps) {
       )}>
         {/* Профиль */}
         <div className="flex flex-col items-center gap-3 px-6 py-8 border-b border-border">
-          <Avatar userId={user?.id} name={user?.display_name} size="lg" />
+          <Avatar src={user ? `/api/users/avatar/${user.id}` : null} name={user?.display_name} size="lg" />
           <div className="text-center">
             <p className="font-semibold">{user?.display_name}</p>
             <p className="text-sm text-muted-foreground">{user?.email}</p>
