@@ -26,7 +26,7 @@ class UserOrganizationRead(BaseModel):
     user_id: uuid.UUID
     org_id: uuid.UUID
     role: OrgRole
-    postition: str | None = None
+    position: str | None = None
     created_at: datetime
     user: UserRead
 
