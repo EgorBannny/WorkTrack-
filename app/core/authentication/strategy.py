@@ -81,7 +81,9 @@ class WorkTrackJWTStrategy(JWTStrategy):
             algorithm=self.algorithm,
         )
 
-    async def destroy_token(self, token: str) -> None:
+    async def destroy_token(self, token: str | None) -> None:
+        if not token:
+            return
         try:
             data = decode_jwt(
                 encoded_jwt=token,
