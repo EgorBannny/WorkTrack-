@@ -33,6 +33,7 @@ from .projects import (
 )
 from .analytics import analytics_router
 from .org_avatar import org_avatar_router
+from .leave_requests import leave_requests_router
 
 organizations_router = APIRouter(
     prefix=settings.api.prefix.orgs,
@@ -45,6 +46,7 @@ organizations_router.include_router(router=comments_router)
 organizations_router.include_router(router=attachments_router)
 organizations_router.include_router(router=analytics_router)
 organizations_router.include_router(router=org_avatar_router)
+organizations_router.include_router(router=leave_requests_router)
 
 
 @organizations_router.get(

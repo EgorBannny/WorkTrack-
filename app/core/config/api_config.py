@@ -15,6 +15,7 @@ class APITags(BaseModel):
     comments: str = "Comments"
     attachments: str = "Attachments"
     analytics: str = "Analytics"
+    leave_requests: str = "Leave Requests"
 
 
 class APIPrefix(BaseModel):
