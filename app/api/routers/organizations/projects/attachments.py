@@ -5,7 +5,11 @@ from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 import filetype
 
-from app.api.crud.attachments import create_attachment, delete_attachment
+from app.api.crud.attachments import (
+    get_task_attachments,
+    create_attachment,
+    delete_attachment,
+)
 from app.api.dependencies.authentication import auth_guard
 from app.api.dependencies.organizations import get_current_user_organization
 from app.api.dependencies.projects import get_current_user_project
@@ -25,6 +29,20 @@ from app.core.schemas import AttachmentRead
 from app.enums import OrgRole, ROLE_HIERARCHY
 
 attachments_router = APIRouter(tags=[settings.api.tags.attachments])
+
+
+@attachments_router.get(
+    "/{org_id}/projects/{project_id}/tasks/{task_id}/attachments",
+    response_model=list[AttachmentRead],
+    status_code=status.HTTP_200_OK,
+)
+async def get_attachments(
+    _: Annotated[UserProject, Depends(get_current_user_project)],
+    task: Annotated[Task, Depends(get_task_or_404)],
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+):
+
+    return await get_task_attachments(session, task.id)
 
 
 @attachments_router.post(

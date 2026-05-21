@@ -7,6 +7,7 @@ import InvitationAcceptPage from '@/pages/invitations/InvitationAcceptPage'
 import ProfilePage from '@/pages/profile/ProfilePage'
 import MembersPage from '@/pages/members/MembersPage'
 import AnalyticsPage from '@/pages/analytics/AnalyticsPage'
+import BoardPage from '@/pages/board/BoardPage'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useAuthStore } from '@/store/auth.store'
 
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/orgs', element: <OrgsPage /> },
       { path: '/orgs/:orgId/projects', element: <ProjectsPage /> },
-      { path: '/orgs/:orgId/projects/:projectId', element: <div className="p-8 text-foreground">Board — coming soon</div> },
+      { path: '/orgs/:orgId/projects/:projectId', element: <BoardPage /> },
       { path: '/invitations', element: <InvitationsPage /> },
       { path: '/invitations/:token', element: <InvitationAcceptPage /> },
       { path: '/profile', element: <ProfilePage /> },
