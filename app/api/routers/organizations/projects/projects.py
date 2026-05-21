@@ -112,18 +112,20 @@ async def add_member_to_project(
 )
 async def create_org_project(
     data: ProjectCreate,
-    _uo: Annotated[UserOrganization, Depends(require_role(OrgRole.manager))],
+    _uo: Annotated[UserOrganization, Depends(require_role(OrgRole.admin))],
     current_user: Annotated[User, auth_guard],
     org: Annotated[Organization, Depends(get_org_or_404)],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
-    return await create_project(
+    project = await create_project(
         session=session,
         org_id=org.id,
         created_by=current_user.id,
         name=data.name,
         description=data.description,
     )
+    await add_project_member(session, current_user.id, project.id)
+    return project
 
 
 @projects_router.patch(
