@@ -10,6 +10,7 @@ class OrganizationRead(BaseModel):
 
     id: uuid.UUID
     name: str
+    description: str | None  # добавить
     is_active: bool
     created_at: datetime
 
@@ -32,7 +33,9 @@ class UserOrganizationRead(BaseModel):
 
 class OrganizationCreate(BaseModel):
     name: str
+    description: str | None = None  # добавить
 
 
 class OrganizationUpdate(BaseModel):
     name: str | None = None
+    description: str | None = None  # добавить

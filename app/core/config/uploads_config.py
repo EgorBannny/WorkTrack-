@@ -40,6 +40,13 @@ class UploadsConfig(BaseModel):
     def default_avatar(self) -> Path:
         return self.base_dir / "avatars" / "default.png"
 
+    @property
+    def org_avatars_dir(self) -> Path:
+        return self.base_dir / "org_avatars"
+
+    def org_avatar_path(self, org_id) -> Path:
+        return self.org_avatars_dir / str(org_id) / "avatar"
+
     def attachment_path(
         self,
         org_id,
