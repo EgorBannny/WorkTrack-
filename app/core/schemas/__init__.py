@@ -23,6 +23,7 @@ __all__ = (
     "MemberWorkloadRead",
     "TimelineEntryRead",
     "PrioritiesRead",
+    "LeaveRequestRead",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -50,3 +51,4 @@ from .analytics import (
     TimelineEntryRead,
     PrioritiesRead,
 )
+from .leave_request import LeaveRequestRead
