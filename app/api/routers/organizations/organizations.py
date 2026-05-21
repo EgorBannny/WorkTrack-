@@ -32,6 +32,7 @@ from .projects import (
     attachments_router,
 )
 from .analytics import analytics_router
+from .org_avatar import org_avatar_router
 
 organizations_router = APIRouter(
     prefix=settings.api.prefix.orgs,
@@ -43,6 +44,7 @@ organizations_router.include_router(router=tasks_router)
 organizations_router.include_router(router=comments_router)
 organizations_router.include_router(router=attachments_router)
 organizations_router.include_router(router=analytics_router)
+organizations_router.include_router(router=org_avatar_router)
 
 
 @organizations_router.get(
