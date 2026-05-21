@@ -74,6 +74,7 @@ async def create_project(
     )
     session.add(project)
     await session.commit()
+    await session.refresh(project)
     await session.refresh(project, attribute_names=["creator"])
     return project
 
@@ -99,6 +100,7 @@ async def update_project(
         setattr(project, key, value)
     session.add(project)
     await session.commit()
+    await session.refresh(project)
     await session.refresh(project, attribute_names=["creator"])
     return project
 
