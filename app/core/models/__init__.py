@@ -5,6 +5,7 @@ __all__ = (
     "User",
     "Organization",
     "UserOrganization",
+    "LeaveRequest",
     "Project",
     "UserProject",
     "Task",
@@ -14,6 +15,6 @@ __all__ = (
 )
 from .helpers import db_helper, redis_helper, Base
 from .user import User
-from .organization import Organization, UserOrganization
+from .organization import Organization, UserOrganization, LeaveRequest
 from .project import Project, UserProject
 from .task import Task, TaskHistory, Comment, Attachment

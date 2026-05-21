@@ -8,6 +8,12 @@ class OrgRole(str, Enum):
     employee = "employee"
 
 
+class LeaveRequestStatus(str, Enum):
+    pending = "pending"
+    approved = "approved"
+    rejected = "rejected"
+
+
 ROLE_HIERARCHY = {
     OrgRole.owner: 4,
     OrgRole.admin: 3,
