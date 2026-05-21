@@ -10,7 +10,7 @@ class OrganizationRead(BaseModel):
 
     id: uuid.UUID
     name: str
-    description: str | None  # добавить
+    description: str | None
     is_active: bool
     created_at: datetime
 

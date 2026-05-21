@@ -63,6 +63,7 @@ async def get_my_organizations(
         OrganizationWithRoleRead(
             id=uo.organization.id,
             name=uo.organization.name,
+            description=uo.organization.description,
             is_active=uo.organization.is_active,
             created_at=uo.organization.created_at,
             role=uo.role,
@@ -84,6 +85,7 @@ async def get_organization(
     return OrganizationWithRoleRead(
         id=org.id,
         name=org.name,
+        description=org.description,
         is_active=org.is_active,
         created_at=org.created_at,
         role=uo.role,
@@ -101,11 +103,12 @@ async def create_organization(
     current_user: Annotated[User, auth_guard],
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
-    org, uo = await create_org_with_owner(session, data.name, current_user.id)
+    org, uo = await create_org_with_owner(session, data.name, current_user.id, data.description)
 
     return OrganizationWithRoleRead(
         id=org.id,
         name=org.name,
+        description=org.description,
         is_active=org.is_active,
         created_at=org.created_at,
         role=uo.role,

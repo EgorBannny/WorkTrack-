@@ -52,8 +52,9 @@ async def create_org_with_owner(
     session: AsyncSession,
     name: str,
     owner_id: uuid.UUID,
+    description: str | None = None,
 ) -> tuple[Organization, UserOrganization]:
-    org = Organization(name=name)
+    org = Organization(name=name, description=description)
     session.add(org)
     await session.flush()
 
