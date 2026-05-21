@@ -5,6 +5,8 @@ import ProjectsPage from '@/pages/projects/ProjectsPage'
 import InvitationsPage from '@/pages/invitations/InvitationsPage'
 import InvitationAcceptPage from '@/pages/invitations/InvitationAcceptPage'
 import ProfilePage from '@/pages/profile/ProfilePage'
+import MembersPage from '@/pages/members/MembersPage'
+import AnalyticsPage from '@/pages/analytics/AnalyticsPage'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useAuthStore } from '@/store/auth.store'
 
@@ -38,6 +40,8 @@ const router = createBrowserRouter([
       { path: '/invitations', element: <InvitationsPage /> },
       { path: '/invitations/:token', element: <InvitationAcceptPage /> },
       { path: '/profile', element: <ProfilePage /> },
+      { path: '/orgs/:orgId/members', element: <MembersPage /> },
+      { path: '/orgs/:orgId/analytics', element: <AnalyticsPage /> },
     ],
   },
   {

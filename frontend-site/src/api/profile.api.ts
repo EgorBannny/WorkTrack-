@@ -3,6 +3,7 @@ import type { UserMe } from './auth.api'
 
 export async function apiUpdateProfile(data: {
   display_name?: string
+  email?: string
   password?: string
 }): Promise<UserMe> {
   const res = await client.patch<UserMe>('/api/users/me', data)

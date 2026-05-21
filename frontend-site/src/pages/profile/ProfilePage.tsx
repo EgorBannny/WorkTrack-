@@ -5,8 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 import { Camera } from 'lucide-react'
 import { apiUpdateProfile, apiUploadUserAvatar, apiDeleteUserAvatar } from '@/api/profile.api'
+import { apiLogin, apiMe } from '@/api/auth.api'
 import { useAuthStore } from '@/store/auth.store'
-import { apiMe } from '@/api/auth.api'
 import { Avatar } from '@/components/ui/Avatar'
 import { AvatarCropper } from '@/components/ui/AvatarCropper'
 import { Button } from '@/components/ui/button'
@@ -21,15 +21,28 @@ const ALLOWED = ['image/jpeg', 'image/png', 'image/webp']
 const nameSchema = z.object({
   display_name: z.string().min(2, 'Минимум 2 символа').max(100),
 })
-
+const emailSchema = z.object({
+  email: z.email('Некорректный email'),
+})
 const passwordSchema = z.object({
-  password: z.string()
+  current_password: z.string().min(1, 'Введите текущий пароль'),
+  new_password: z.string()
     .min(8, 'Минимум 8 символов')
     .refine(validatePassword, 'Пароль не соответствует требованиям'),
 })
 
 type NameForm = z.infer<typeof nameSchema>
+type EmailForm = z.infer<typeof emailSchema>
 type PasswordForm = z.infer<typeof passwordSchema>
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="pb-8 mb-8 border-b border-border last:border-0 last:mb-0 last:pb-0">
+      <h2 className="text-base font-medium mb-4">{title}</h2>
+      {children}
+    </section>
+  )
+}
 
 export default function ProfilePage() {
   const user = useAuthStore((s) => s.user)
@@ -44,21 +57,36 @@ export default function ProfilePage() {
     resolver: zodResolver(nameSchema),
     defaultValues: { display_name: user?.display_name ?? '' },
   })
-
+  const emailForm = useForm<EmailForm>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: { email: user?.email ?? '' },
+  })
   const passwordForm = useForm<PasswordForm>({ resolver: zodResolver(passwordSchema) })
-  const watchedPassword = passwordForm.watch('password', '')
+  const watchedPassword = passwordForm.watch('new_password', '')
 
   const { mutate: saveName, isPending: isSavingName, isSuccess: nameSaved } = useMutation({
     mutationFn: (data: NameForm) => apiUpdateProfile({ display_name: data.display_name }),
-    onSuccess: async () => {
-      const updated = await apiMe()
-      setUser(updated)
-    },
+    onSuccess: async () => { const u = await apiMe(); setUser(u) },
+  })
+
+  const { mutate: saveEmail, isPending: isSavingEmail, isSuccess: emailSaved } = useMutation({
+    mutationFn: (data: EmailForm) => apiUpdateProfile({ email: data.email }),
+    onSuccess: async () => { const u = await apiMe(); setUser(u) },
   })
 
   const { mutate: savePassword, isPending: isSavingPassword, isSuccess: passwordSaved } = useMutation({
-    mutationFn: (data: PasswordForm) => apiUpdateProfile({ password: data.password }),
+    mutationFn: async (data: PasswordForm) => {
+      try {
+        await apiLogin(user!.email, data.current_password)
+      } catch {
+        throw new Error('Неверный текущий пароль')
+      }
+      await apiUpdateProfile({ password: data.new_password })
+    },
     onSuccess: () => passwordForm.reset(),
+    onError: (err: Error) => {
+      passwordForm.setError('current_password', { message: err.message })
+    },
   })
 
   const { mutate: deleteAvatar, isPending: isDeletingAvatar } = useMutation({
@@ -99,8 +127,7 @@ export default function ProfilePage() {
       <h1 className="text-2xl font-semibold mb-8">Профиль</h1>
 
       {/* Аватар */}
-      <section className="mb-8 pb-8 border-b border-border">
-        <h2 className="text-base font-medium mb-4">Фото профиля</h2>
+      <Section title="Фото профиля">
         <div className="flex items-center gap-5">
           <div className="relative">
             <Avatar
@@ -116,7 +143,7 @@ export default function ProfilePage() {
               <Camera className="size-3.5" />
             </button>
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
               Изменить фото
             </Button>
@@ -125,7 +152,7 @@ export default function ProfilePage() {
               size="sm"
               disabled={isDeletingAvatar}
               onClick={() => deleteAvatar()}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10 block"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
             >
               Удалить
             </Button>
@@ -133,44 +160,59 @@ export default function ProfilePage() {
           <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileChange} />
         </div>
         {avatarError && <p className="text-xs text-destructive mt-2">{avatarError}</p>}
-      </section>
+      </Section>
 
       {/* Имя */}
-      <section className="mb-8 pb-8 border-b border-border">
-        <h2 className="text-base font-medium mb-4">Имя</h2>
+      <Section title="Имя">
         <form onSubmit={nameForm.handleSubmit((d) => saveName(d))} className="space-y-3 max-w-sm">
           <div className="space-y-1.5">
             <Label htmlFor="display-name">Отображаемое имя</Label>
-            <Input
-              id="display-name"
-              autoComplete="name"
-              aria-invalid={!!nameForm.formState.errors.display_name}
-              {...nameForm.register('display_name')}
-            />
+            <Input id="display-name" autoComplete="name" aria-invalid={!!nameForm.formState.errors.display_name} {...nameForm.register('display_name')} />
             {nameForm.formState.errors.display_name && (
               <p className="text-xs text-destructive">{nameForm.formState.errors.display_name.message}</p>
             )}
           </div>
           <div className="flex items-center gap-3">
-            <Button type="submit" size="sm" disabled={isSavingName}>
-              {isSavingName ? 'Сохраняю...' : 'Сохранить'}
-            </Button>
+            <Button type="submit" size="sm" disabled={isSavingName}>{isSavingName ? 'Сохраняю...' : 'Сохранить'}</Button>
             {nameSaved && <p className="text-xs text-green-500">Сохранено</p>}
           </div>
         </form>
-      </section>
+      </Section>
 
-      {/* Email (только просмотр) */}
-      <section className="mb-8 pb-8 border-b border-border">
-        <h2 className="text-base font-medium mb-4">Email</h2>
-        <p className="text-sm text-muted-foreground mb-1">Адрес электронной почты</p>
-        <p className="text-sm font-medium">{user?.email}</p>
-      </section>
+      {/* Email */}
+      <Section title="Email">
+        <form onSubmit={emailForm.handleSubmit((d) => saveEmail(d))} className="space-y-3 max-w-sm">
+          <div className="space-y-1.5">
+            <Label htmlFor="email">Адрес электронной почты</Label>
+            <Input id="email" type="email" autoComplete="email" aria-invalid={!!emailForm.formState.errors.email} {...emailForm.register('email')} />
+            {emailForm.formState.errors.email && (
+              <p className="text-xs text-destructive">{emailForm.formState.errors.email.message}</p>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <Button type="submit" size="sm" disabled={isSavingEmail}>{isSavingEmail ? 'Сохраняю...' : 'Сохранить'}</Button>
+            {emailSaved && <p className="text-xs text-green-500">Сохранено</p>}
+          </div>
+        </form>
+      </Section>
 
       {/* Пароль */}
-      <section>
-        <h2 className="text-base font-medium mb-4">Смена пароля</h2>
+      <Section title="Смена пароля">
         <form onSubmit={passwordForm.handleSubmit((d) => savePassword(d))} className="space-y-3 max-w-sm">
+          <div className="space-y-1.5">
+            <Label htmlFor="current-password">Текущий пароль</Label>
+            <Input
+              id="current-password"
+              type="password"
+              autoComplete="current-password"
+              placeholder="Введите текущий пароль"
+              aria-invalid={!!passwordForm.formState.errors.current_password}
+              {...passwordForm.register('current_password')}
+            />
+            {passwordForm.formState.errors.current_password && (
+              <p className="text-xs text-destructive">{passwordForm.formState.errors.current_password.message}</p>
+            )}
+          </div>
           <div className="space-y-1.5">
             <Label htmlFor="new-password">Новый пароль</Label>
             <Input
@@ -178,22 +220,16 @@ export default function ProfilePage() {
               type="password"
               autoComplete="new-password"
               placeholder="Минимум 8 символов"
-              aria-invalid={!!passwordForm.formState.errors.password}
-              {...passwordForm.register('password')}
+              {...passwordForm.register('new_password')}
             />
             <PasswordStrength password={watchedPassword} />
-            {passwordForm.formState.errors.password && !watchedPassword && (
-              <p className="text-xs text-destructive">{passwordForm.formState.errors.password.message}</p>
-            )}
           </div>
           <div className="flex items-center gap-3">
-            <Button type="submit" size="sm" disabled={isSavingPassword}>
-              {isSavingPassword ? 'Сохраняю...' : 'Сменить пароль'}
-            </Button>
+            <Button type="submit" size="sm" disabled={isSavingPassword}>{isSavingPassword ? 'Сохраняю...' : 'Сменить пароль'}</Button>
             {passwordSaved && <p className="text-xs text-green-500">Пароль изменён</p>}
           </div>
         </form>
-      </section>
+      </Section>
     </div>
   )
 }
