@@ -1,7 +1,8 @@
-import { Menu, Layers } from 'lucide-react'
+import { Menu, Layers, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import { Avatar } from '@/components/ui/Avatar'
 import { useAuthStore } from '@/store/auth.store'
+import { useOrgStore } from '@/store/org.store'
 
 interface HeaderProps {
   onMenuClick: () => void
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 export function Header({ onMenuClick, onAvatarClick }: HeaderProps) {
   const user = useAuthStore((s) => s.user)
+  const currentOrg = useOrgStore((s) => s.currentOrg)
 
   return (
     <header className="h-16 flex items-center justify-between px-5 border-b border-border bg-background shrink-0">
@@ -22,16 +24,30 @@ export function Header({ onMenuClick, onAvatarClick }: HeaderProps) {
           <Menu className="size-6" />
         </button>
 
-        <Link
-          to="/orgs"
-          title="Главная страница WorkTrack"
-          className="flex items-center gap-2.5 rounded-lg"
-        >
-          <div className="size-8 rounded-lg bg-primary flex items-center justify-center">
-            <Layers className="size-4 text-primary-foreground" />
-          </div>
-          <span className="font-semibold text-base select-none">WorkTrack</span>
-        </Link>
+        <div className="flex items-center gap-1.5">
+          <Link
+            to="/orgs"
+            title="Главная страница WorkTrack"
+            className="flex items-center gap-2 rounded-lg"
+          >
+            <div className="size-8 rounded-lg bg-primary flex items-center justify-center">
+              <Layers className="size-4 text-primary-foreground" />
+            </div>
+            <span className="font-semibold text-base select-none">WorkTrack</span>
+          </Link>
+
+          {currentOrg && (
+            <>
+              <ChevronRight className="size-4 text-muted-foreground" />
+              <Link
+                to={`/orgs/${currentOrg.id}/projects`}
+                className="font-medium text-sm text-muted-foreground hover:text-foreground transition-colors select-none"
+              >
+                {currentOrg.name}
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
       <button

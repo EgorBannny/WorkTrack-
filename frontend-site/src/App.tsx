@@ -1,6 +1,10 @@
 import { createBrowserRouter, RouterProvider, redirect } from 'react-router'
 import AuthPage from '@/pages/auth/AuthPage'
 import OrgsPage from '@/pages/orgs/OrgsPage'
+import ProjectsPage from '@/pages/projects/ProjectsPage'
+import InvitationsPage from '@/pages/invitations/InvitationsPage'
+import InvitationAcceptPage from '@/pages/invitations/InvitationAcceptPage'
+import ProfilePage from '@/pages/profile/ProfilePage'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useAuthStore } from '@/store/auth.store'
 
@@ -29,7 +33,11 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { path: '/orgs', element: <OrgsPage /> },
-      { path: '/orgs/:orgId/projects', element: <div className="p-8 text-foreground">Projects — coming soon</div> },
+      { path: '/orgs/:orgId/projects', element: <ProjectsPage /> },
+      { path: '/orgs/:orgId/projects/:projectId', element: <div className="p-8 text-foreground">Board — coming soon</div> },
+      { path: '/invitations', element: <InvitationsPage /> },
+      { path: '/invitations/:token', element: <InvitationAcceptPage /> },
+      { path: '/profile', element: <ProfilePage /> },
     ],
   },
   {
