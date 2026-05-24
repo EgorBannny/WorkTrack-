@@ -1,6 +1,8 @@
+# embedded packages
 from enum import Enum
 
 
+# роли в организации
 class OrgRole(str, Enum):
     owner = "owner"
     admin = "admin"
@@ -8,15 +10,17 @@ class OrgRole(str, Enum):
     employee = "employee"
 
 
-class LeaveRequestStatus(str, Enum):
-    pending = "pending"
-    approved = "approved"
-    rejected = "rejected"
-
-
+# иерархия ролей
 ROLE_HIERARCHY = {
     OrgRole.owner: 4,
     OrgRole.admin: 3,
     OrgRole.manager: 2,
     OrgRole.employee: 1,
 }
+
+
+# перечисление для запросов на выход из организации
+class LeaveRequestStatus(str, Enum):
+    pending = "pending"
+    approved = "approved"
+    rejected = "rejected"
