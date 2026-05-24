@@ -2,7 +2,7 @@
 from enum import Enum
 
 
-# статусы задачи
+# перечисление статусов задачи
 class TaskStatus(str, Enum):
     backlog = "backlog"
     todo = "todo"
@@ -11,7 +11,7 @@ class TaskStatus(str, Enum):
     done = "done"
 
 
-# приоритеты задач
+# перечисление приоритетов задач
 class TaskPriority(str, Enum):
     low = "low"
     medium = "medium"

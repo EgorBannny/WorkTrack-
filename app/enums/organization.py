@@ -2,7 +2,7 @@
 from enum import Enum
 
 
-# роли в организации
+# перечисление для ролей в организации
 class OrgRole(str, Enum):
     owner = "owner"
     admin = "admin"
