@@ -115,8 +115,12 @@ async def update_task(
             session.add(history)
 
     await session.commit()
-    await session.refresh(task, attribute_names=["creator", "assignee"])
-    return task
+    result = await session.execute(
+        select(Task)
+        .where(Task.id == task.id)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+    )
+    return result.scalar_one()
 
 
 async def update_task_position(
