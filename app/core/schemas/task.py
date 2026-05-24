@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, date
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from app.enums.task import TaskStatus, TaskPriority
 from app.core.schemas.user import UserRead
 
@@ -34,7 +34,7 @@ class TaskHistoryRead(BaseModel):
 
 
 class TaskCreate(BaseModel):
-    title: str
+    title: str = Field(min_length=1)
     description: str | None = None
     priority: TaskPriority = TaskPriority.medium
     assignee_id: uuid.UUID | None = None
