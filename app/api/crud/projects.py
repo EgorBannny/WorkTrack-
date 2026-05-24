@@ -87,8 +87,12 @@ async def add_project_member(
     up = UserProject(user_id=user_id, project_id=project_id)
     session.add(up)
     await session.commit()
-    await session.refresh(up)
-    return up
+    result = await session.execute(
+        select(UserProject)
+        .where(UserProject.user_id == user_id, UserProject.project_id == project_id)
+        .options(selectinload(UserProject.user))
+    )
+    return result.scalar_one()
 
 
 async def update_project(
