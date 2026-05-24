@@ -1,13 +1,11 @@
-import { Building2, Bell, Mail, MessageSquare, Layers, Users, FolderOpen, BarChart2 } from 'lucide-react'
+import { Building2, Mail, Layers, Users, FolderOpen, BarChart2 } from 'lucide-react'
 import { useNavigate, useLocation } from 'react-router'
 import { useOrgStore } from '@/store/org.store'
 import { cn } from '@/lib/utils'
 
 const GLOBAL_NAV = [
-  { icon: Building2,     label: 'Организации', href: '/orgs' },
-  { icon: Bell,          label: 'Уведомления', href: '/notifications' },
-  { icon: Mail,          label: 'Приглашения', href: '/invitations' },
-  { icon: MessageSquare, label: 'Сообщения',   href: '/messages' },
+  { icon: Building2, label: 'Организации', href: '/orgs' },
+  { icon: Mail,      label: 'Приглашения', href: '/invitations' },
 ]
 
 interface LeftDrawerProps {
