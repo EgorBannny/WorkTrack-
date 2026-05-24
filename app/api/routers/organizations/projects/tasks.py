@@ -144,7 +144,6 @@ async def update_project_task(
         session=session,
         task=task,
         data=update_data,
-        changed_by=current_user.id,
     )
 
 
