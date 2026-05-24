@@ -131,7 +131,12 @@ async def update_task_position(
     task.position = position
     session.add(task)
     await session.commit()
-    return task
+    result = await session.execute(
+        select(Task)
+        .where(Task.id == task.id)
+        .options(selectinload(Task.creator), selectinload(Task.assignee))
+    )
+    return result.scalar_one()
 
 
 async def delete_task(

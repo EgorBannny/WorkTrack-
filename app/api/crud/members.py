@@ -64,8 +64,15 @@ async def update_member(
         uo.position = position
     session.add(uo)
     await session.commit()
-    await session.refresh(uo)
-    return uo
+    result = await session.execute(
+        select(UserOrganization)
+        .where(
+            UserOrganization.user_id == uo.user_id,
+            UserOrganization.org_id == uo.org_id,
+        )
+        .options(selectinload(UserOrganization.user))
+    )
+    return result.scalar_one()
 
 
 async def remove_member(

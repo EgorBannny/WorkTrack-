@@ -55,8 +55,12 @@ async def update_comment(
 ) -> Comment:
     comment.content = content
     await session.commit()
-    await session.refresh(comment, attribute_names=["author"])
-    return comment
+    result = await session.execute(
+        select(Comment)
+        .where(Comment.id == comment.id)
+        .options(selectinload(Comment.author))
+    )
+    return result.scalar_one()
 
 
 async def delete_comment(
