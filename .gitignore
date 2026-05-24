@@ -224,3 +224,4 @@ uploads/
 deploy-front.sh
 deploy-back.sh
 deploy.sh
+.env.test
