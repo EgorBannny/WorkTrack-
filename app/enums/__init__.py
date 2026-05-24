@@ -9,4 +9,4 @@ __all__ = (
 from .organization import OrgRole, ROLE_HIERARCHY, LeaveRequestStatus
 
 # задачи
-from .task import TaskStatus, TaskPriorityы
+from .task import TaskStatus, TaskPriority
