@@ -96,7 +96,7 @@ def make_cookie_logout_all_router() -> APIRouter:
         )
         response.delete_cookie(
             key=settings.auth.cookie.refresh_name,
-            path=settings.auth.cookie.refersh_path,
+            path=settings.auth.cookie.refresh_path,
         )
 
     return router
