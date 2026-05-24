@@ -27,7 +27,7 @@ async def get_current_user_organization(
     uo = await get_user_organization(session, current_user.id, org.id)
     if not uo:
         raise HTTPException(
-            status.HTTP_403_FORBIDDEN, "You are not a member of this organization"
+            status.HTTP_404_NOT_FOUND, "Organization not found"
         )
     return uo
 
