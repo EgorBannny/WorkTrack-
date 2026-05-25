@@ -68,6 +68,7 @@ class TestBearerLogin:
         assert r.status_code == 200
         data = r.json()
         assert "access_token" in data
+        assert "refresh_token" in data
         assert data["token_type"] == "bearer"
 
     async def test_authenticated_request(self, client: AsyncClient, registered_user: dict):
@@ -78,6 +79,116 @@ class TestBearerLogin:
         token = r.json()["access_token"]
         r = await client.get("/api/users/me", headers={"Authorization": f"Bearer {token}"})
         assert r.status_code == 200
+
+    async def test_bearer_accesses_business_endpoint(self, client: AsyncClient, registered_user: dict):
+        r = await client.post(
+            "/api/auth/bearer/login",
+            data={"username": DEFAULT_EMAIL, "password": DEFAULT_PASSWORD},
+        )
+        token = r.json()["access_token"]
+        r = await client.post(
+            "/api/orgs",
+            json={"name": "Bearer Org"},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        assert r.status_code == 201
+        assert r.json()["name"] == "Bearer Org"
+
+
+class TestBearerLogout:
+    async def _login(self, client: AsyncClient) -> dict:
+        r = await client.post(
+            "/api/auth/bearer/login",
+            data={"username": DEFAULT_EMAIL, "password": DEFAULT_PASSWORD},
+        )
+        return r.json()
+
+    async def test_logout_success(self, client: AsyncClient, registered_user: dict):
+        data = await self._login(client)
+        r = await client.post(
+            "/api/auth/bearer/logout",
+            json={"refresh_token": data["refresh_token"]},
+            headers={"Authorization": f"Bearer {data['access_token']}"},
+        )
+        assert r.status_code == 204
+
+    async def test_logout_invalidates_token(self, client: AsyncClient, registered_user: dict):
+        data = await self._login(client)
+        access_token = data["access_token"]
+        await client.post(
+            "/api/auth/bearer/logout",
+            json={"refresh_token": data["refresh_token"]},
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        r = await client.get("/api/users/me", headers={"Authorization": f"Bearer {access_token}"})
+        assert r.status_code == 401
+
+    async def test_logout_unauthenticated(self, client: AsyncClient):
+        r = await client.post(
+            "/api/auth/bearer/logout",
+            json={"refresh_token": "invalid"},
+        )
+        assert r.status_code == 401
+
+    async def test_logout_all(self, client: AsyncClient, registered_user: dict):
+        data = await self._login(client)
+        r = await client.post(
+            "/api/auth/bearer/logout-all",
+            headers={"Authorization": f"Bearer {data['access_token']}"},
+        )
+        assert r.status_code == 204
+
+    async def test_logout_all_invalidates_all_tokens(self, client: AsyncClient, registered_user: dict):
+        data1 = await self._login(client)
+        data2 = await self._login(client)
+
+        await client.post(
+            "/api/auth/bearer/logout-all",
+            headers={"Authorization": f"Bearer {data1['access_token']}"},
+        )
+
+        r = await client.get("/api/users/me", headers={"Authorization": f"Bearer {data1['access_token']}"})
+        assert r.status_code == 401
+        r = await client.get("/api/users/me", headers={"Authorization": f"Bearer {data2['access_token']}"})
+        assert r.status_code == 401
+
+
+class TestBearerRefresh:
+    async def _login(self, client: AsyncClient) -> dict:
+        r = await client.post(
+            "/api/auth/bearer/login",
+            data={"username": DEFAULT_EMAIL, "password": DEFAULT_PASSWORD},
+        )
+        return r.json()
+
+    async def test_refresh_success(self, client: AsyncClient, registered_user: dict):
+        data = await self._login(client)
+        r = await client.post(
+            "/api/auth/bearer/refresh",
+            json={"access_token": data["access_token"], "refresh_token": data["refresh_token"]},
+        )
+        assert r.status_code == 200
+        new_data = r.json()
+        assert "access_token" in new_data
+        assert "refresh_token" in new_data
+        assert new_data["token_type"] == "bearer"
+
+    async def test_refresh_new_token_works(self, client: AsyncClient, registered_user: dict):
+        data = await self._login(client)
+        r = await client.post(
+            "/api/auth/bearer/refresh",
+            json={"access_token": data["access_token"], "refresh_token": data["refresh_token"]},
+        )
+        new_token = r.json()["access_token"]
+        r = await client.get("/api/users/me", headers={"Authorization": f"Bearer {new_token}"})
+        assert r.status_code == 200
+
+    async def test_refresh_unauthenticated(self, client: AsyncClient):
+        r = await client.post(
+            "/api/auth/bearer/refresh",
+            json={"access_token": "invalid", "refresh_token": "invalid"},
+        )
+        assert r.status_code == 401
 
 
 class TestLogout:
