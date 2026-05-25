@@ -12,3 +12,4 @@ frontend-site/
 frontend-mobile/
 .git/
 deploy/
+app/tests/
