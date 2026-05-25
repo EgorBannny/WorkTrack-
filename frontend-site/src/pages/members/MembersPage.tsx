@@ -213,7 +213,7 @@ export default function MembersPage() {
       {showInvite && <InviteModal orgId={orgId!} onClose={() => setShowInvite(false)} />}
       {editMember && <EditMemberModal member={editMember} orgId={orgId!} currentRole={myRole} onClose={() => setEditMember(null)} />}
 
-      <div className="flex-1 p-8 max-w-3xl mx-auto w-full">
+      <div className="flex-1 p-4 sm:p-8 max-w-3xl mx-auto w-full">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-semibold">Участники</h1>
@@ -237,15 +237,15 @@ export default function MembersPage() {
               {leaveRequests.map((req) => {
                 const member = members.find((m) => m.user_id === req.user_id)
                 return (
-                  <div key={req.id} className="flex items-center justify-between px-4 py-3">
-                    <div className="flex items-center gap-3">
+                  <div key={req.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
                       <Avatar src={`/api/users/avatar/${req.user_id}`} name={member?.user.display_name} size="sm" />
-                      <div>
-                        <p className="text-sm font-medium">{member?.user.display_name ?? '—'}</p>
-                        <p className="text-xs text-muted-foreground">{member?.user.email}</p>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium truncate">{member?.user.display_name ?? '—'}</p>
+                        <p className="text-xs text-muted-foreground truncate">{member?.user.email}</p>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 shrink-0">
                       <Button size="sm" variant="ghost" onClick={() => rejectLeave(req.id)} className="text-destructive hover:bg-destructive/10 hover:text-destructive">
                         <XCircle className="size-4" />
                         Отклонить
@@ -293,7 +293,7 @@ export default function MembersPage() {
                   </span>
 
                   {canEdit && (
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                       <button
                         onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpenId === member.user_id ? null : member.user_id) }}
                         className="size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"

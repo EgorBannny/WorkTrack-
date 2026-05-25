@@ -147,7 +147,7 @@ function ProjectCard({
 
       {/* Три точки */}
       {canManage && (
-        <div className="absolute top-4 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-4 right-3 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
           <button
             onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen) }}
             className="size-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
@@ -250,7 +250,7 @@ export default function ProjectsPage() {
         </div>
       )}
 
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-4 sm:p-8">
         {/* Шапка страницы */}
         <div className="flex items-center justify-between mb-8">
           <div>

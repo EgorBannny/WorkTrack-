@@ -17,7 +17,7 @@ export default function AuthPage() {
   const [mode, setMode] = useState<'login' | 'register'>('login')
 
   return (
-    <div className="min-h-screen flex relative">
+    <div className="h-screen flex relative overflow-hidden">
       <div className="absolute top-4 right-4 z-10"><ThemeToggle /></div>
 
       {/* ── Левая панель (десктоп) ── */}
@@ -72,21 +72,23 @@ export default function AuthPage() {
       </div>
 
       {/* ── Правая панель — форма ── */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm">
+      <div className="flex-1 overflow-y-auto">
+        <div className="min-h-full flex items-center justify-center p-6 sm:p-8">
+          <div className="w-full max-w-sm">
 
-          {/* Мобильная шапка */}
-          <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="size-7 rounded-lg bg-primary flex items-center justify-center">
-              <Layers className="size-3.5 text-primary-foreground" />
+            {/* Мобильная шапка */}
+            <div className="flex items-center gap-2 mb-8 lg:hidden">
+              <div className="size-7 rounded-lg bg-primary flex items-center justify-center">
+                <Layers className="size-3.5 text-primary-foreground" />
+              </div>
+              <span className="font-semibold">WorkTrack</span>
             </div>
-            <span className="font-semibold">WorkTrack</span>
-          </div>
 
-          {mode === 'login'
-            ? <LoginForm onSwitch={() => setMode('register')} />
-            : <RegisterForm onSwitch={() => setMode('login')} />
-          }
+            {mode === 'login'
+              ? <LoginForm onSwitch={() => setMode('register')} />
+              : <RegisterForm onSwitch={() => setMode('login')} />
+            }
+          </div>
         </div>
       </div>
 

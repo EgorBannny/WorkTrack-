@@ -242,7 +242,7 @@ export function TaskDetailModal({ task, orgId, projectId, onClose }: Props) {
                             </div>
 
                             {/* Действия */}
-                            <div className="flex items-center gap-1 opacity-0 group-hover/att:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover/att:opacity-100 transition-opacity">
                               {canPreview && (
                                 <button
                                   onClick={() => openInBrowser(a)}
@@ -312,7 +312,7 @@ export function TaskDetailModal({ task, orgId, projectId, onClose }: Props) {
                             <div className="group/comment relative">
                               <p className="text-sm text-foreground whitespace-pre-wrap">{c.content}</p>
                               {(isOwn || canManage) && (
-                                <div className="absolute top-0 right-0 opacity-0 group-hover/comment:opacity-100 flex gap-1">
+                                <div className="absolute top-0 right-0 sm:opacity-0 sm:group-hover/comment:opacity-100 flex gap-1">
                                   {isOwn && (
                                     <button onClick={() => { setEditingCommentId(c.id); setEditingCommentText(c.content) }} className="size-6 flex items-center justify-center rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
                                       <Pencil className="size-3" />
