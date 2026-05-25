@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "WorkTrack",
+    "slug": "work-track-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.worktrack.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.worktrack.mobile"
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
+  }
+}
